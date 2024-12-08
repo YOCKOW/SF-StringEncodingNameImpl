@@ -23,6 +23,16 @@ private extension Unicode.Scalar {
   }
 }
 
+private extension String {
+  var _trimmed: Substring {
+    guard let firstIndexOfNonWhitespace = firstIndex(where: { !$0.isWhitespace }),
+          let lastIndexOfNonWhitespace = lastIndex(where: { !$0.isWhitespace }) else {
+      return ""
+    }
+    return self[firstIndexOfNonWhitespace...lastIndexOfNonWhitespace]
+  }
+}
+
 /// ICU-independent String Encoding Name Parser.
 class StringEncodingNameParser {
   enum Token: Equatable {
@@ -49,14 +59,14 @@ class StringEncodingNameParser {
     case whatwgStandard
   }
 
-  let scalars: String.UnicodeScalarView
+  let scalars: Substring.UnicodeScalarView
 
-  var currentIndex: String.UnicodeScalarView.Index
+  var currentIndex: Substring.UnicodeScalarView.Index
 
   let variant: Variant
 
   init(_ name: String, variant: Variant) {
-    self.scalars = name.unicodeScalars
+    self.scalars = name._trimmed.unicodeScalars
     self.currentIndex = scalars.startIndex
     self.variant = variant
   }
