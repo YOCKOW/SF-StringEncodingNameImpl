@@ -149,3 +149,39 @@ extension String {
     }
   }
 }
+
+/// Info about IANA Charset.
+struct IANACharset {
+  /// Preferred MIME Name
+  let preferredMIMEName: String?
+
+  /// The name of this charset
+  let name: String
+
+  /// The aliases of this charset
+  let aliases: Array<String>
+
+  var representativeName: String {
+    return preferredMIMEName ?? name
+  }
+
+  init(preferredMIMEName: String?, name: String, aliases: Array<String>) {
+    self.preferredMIMEName = preferredMIMEName
+    self.name = name
+    self.aliases = aliases
+  }
+}
+
+/// Info about WHATWG Encoding.
+struct WHATWGEncoding {
+  /// The name of this encoding
+  let name: String
+
+  /// String lables of this encoding
+  let labels: Array<String>
+
+  init(name: String, labels: Array<String>) {
+    self.name = name
+    self.labels = labels
+  }
+}
