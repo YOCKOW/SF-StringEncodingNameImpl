@@ -56,7 +56,7 @@ class StringEncodingNameParser {
 
   enum Variant: Equatable {
     case ianaCharset
-    case whatwgStandard
+    case whatwgEncoding
   }
 
   let scalars: Substring.UnicodeScalarView
@@ -76,7 +76,7 @@ class StringEncodingNameParser {
   /// If `variant` is
   ///  - `ianaCharset`: this parser follows ["Charset Alias Matching"](https://www.unicode.org/reports/tr22/tr22-8.html#Charset_Alias_Matching)
   ///                   rule defined in UTS#22.
-  ///  - `whatwgStandard`: this parser uses just ASCII case-insensitive match.
+  ///  - `whatwgEncoding`: this parser uses just ASCII case-insensitive match.
   func nextToken() -> Token? {
     guard currentIndex < scalars.endIndex else {
       return nil
@@ -134,7 +134,7 @@ class StringEncodingNameParser {
     switch variant {
     case .ianaCharset:
       return __nextIANACharsetToken()
-    case .whatwgStandard:
+    case .whatwgEncoding:
       return __nextWHATWGStandardToken()
     }
   }
@@ -143,7 +143,7 @@ class StringEncodingNameParser {
 extension String {
   func isEqual(
     to other: String,
-    asStringEncodingName variant: StringEncodingNameParser.Variant
+    asStringEncodingNameOf variant: StringEncodingNameParser.Variant
   ) -> Bool {
     let myParser = StringEncodingNameParser(self, variant: variant)
     let otherParser = StringEncodingNameParser(other, variant: variant)
