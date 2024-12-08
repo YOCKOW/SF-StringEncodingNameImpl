@@ -161,21 +161,21 @@ extension String {
 }
 
 /// Info about IANA Charset.
-struct IANACharset {
+package struct IANACharset {
   /// Preferred MIME Name
-  let preferredMIMEName: String?
+  package let preferredMIMEName: String?
 
   /// The name of this charset
-  let name: String
+  package let name: String
 
   /// The aliases of this charset
-  let aliases: Array<String>
+  package let aliases: Array<String>
 
-  var representativeName: String {
+  package var representativeName: String {
     return preferredMIMEName ?? name
   }
 
-  init(preferredMIMEName: String?, name: String, aliases: Array<String>) {
+  package init(preferredMIMEName: String?, name: String, aliases: Array<String>) {
     self.preferredMIMEName = preferredMIMEName
     self.name = name
     self.aliases = aliases
@@ -183,14 +183,14 @@ struct IANACharset {
 }
 
 /// Info about WHATWG Encoding.
-struct WHATWGEncoding {
+package struct WHATWGEncoding {
   /// The name of this encoding
-  let name: String
+  package let name: String
 
   /// String lables of this encoding
-  let labels: Array<String>
+  package let labels: Array<String>
 
-  init(name: String, labels: Array<String>) {
+  package init(name: String, labels: Array<String>) {
     self.name = name
     self.labels = labels
   }

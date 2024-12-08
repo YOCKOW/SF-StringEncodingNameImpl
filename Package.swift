@@ -5,6 +5,9 @@ import PackageDescription
 
 let package = Package(
   name: "StringEncodingNameImpl",
+  platforms: [
+    .macOS(.v14),
+  ],
   products: [
     // Products define the executables and libraries a package produces, making them visible to other packages.
     .library(
@@ -13,9 +16,16 @@ let package = Package(
         "StringEncodingNameImpl"
       ]
     ),
+    .executable(
+      name: "CodeGenerator",
+      targets: [
+        "CodeGenerator"
+      ]
+    )
   ],
   dependencies: [
-    .package(url:"https://github.com/YOCKOW/ySwiftExtensions.git", from: "1.11.1"),
+    .package(url: "https://github.com/YOCKOW/SwiftStringComposition.git", from: "2.1.0"),
+    .package(url: "https://github.com/YOCKOW/ySwiftExtensions.git", from: "1.11.1"),
   ],
   targets: [
     // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -29,6 +39,14 @@ let package = Package(
         "StringEncodingNameImpl"
       ]
     ),
+    .executableTarget(
+      name: "CodeGenerator",
+      dependencies: [
+        "StringEncodingNameImpl",
+        "SwiftStringComposition",
+        "ySwiftExtensions",
+      ]
+    )
   ],
   swiftLanguageModes: [.v6]
 )
