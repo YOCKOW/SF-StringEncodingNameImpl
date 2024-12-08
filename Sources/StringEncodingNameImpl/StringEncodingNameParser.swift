@@ -129,3 +129,23 @@ class StringEncodingNameParser {
     }
   }
 }
+
+extension String {
+  func isEqual(
+    to other: String,
+    asStringEncodingName variant: StringEncodingNameParser.Variant
+  ) -> Bool {
+    let myParser = StringEncodingNameParser(self, variant: variant)
+    let otherParser = StringEncodingNameParser(other, variant: variant)
+    while true {
+      let myToken = myParser.nextToken()
+      let otherToken = otherParser.nextToken()
+      guard myToken == otherToken else {
+        return false
+      }
+      if myToken == nil { // End of the strings.
+        return true
+      }
+    }
+  }
+}
