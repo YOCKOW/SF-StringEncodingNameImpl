@@ -180,6 +180,22 @@ package struct IANACharset {
     self.name = name
     self.aliases = aliases
   }
+
+  func matches(_ string: String) -> Bool {
+    if let preferredMIMEName = self.preferredMIMEName,
+       preferredMIMEName.isEqual(to: string, asStringEncodingNameOf: .ianaCharset) {
+      return true
+    }
+    if name.isEqual(to: string, asStringEncodingNameOf: .ianaCharset) {
+      return true
+    }
+    for alias in aliases {
+      if alias.isEqual(to: string, asStringEncodingNameOf: .ianaCharset) {
+        return true
+      }
+    }
+    return false
+  }
 }
 
 /// Info about WHATWG Encoding.
@@ -193,5 +209,14 @@ package struct WHATWGEncoding {
   package init(name: String, labels: Array<String>) {
     self.name = name
     self.labels = labels
+  }
+
+  func matches(_ string: String) -> Bool {
+    for label in labels {
+      if label.isEqual(to: string, asStringEncodingNameOf: .whatwgEncoding) {
+        return true
+      }
+    }
+    return false
   }
 }

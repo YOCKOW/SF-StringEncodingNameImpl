@@ -33,4 +33,26 @@ import Testing
     #expect(!"UTF-8".isEqual(to: "utf-08", asStringEncodingNameOf: .whatwgEncoding))
     #expect(!"UTF-8".isEqual(to: "utf-80", asStringEncodingNameOf: .whatwgEncoding))
   }
+
+  @Test func test_IANACharsetMatching() {
+    #expect(IANACharset.usASCII.matches("us-ascii"))
+    #expect(IANACharset.usASCII.matches("iso_0646irv1991"))
+    #expect(IANACharset.usASCII.matches("us"))
+    #expect(!IANACharset.usASCII.matches("USA"))
+
+    #expect(IANACharset.eucJP.matches("EuC-Jp"))
+    #expect(IANACharset.eucJP.matches("Extended_UNIX_Code_Packed_Format_for_Japanese"))
+    #expect(!IANACharset.eucJP.matches("EUC-KR"))
+  }
+
+  @Test func test_WHATWGEncodingMatching() {
+    #expect(WHATWGEncoding.utf8.matches("UTF-8"))
+    #expect(WHATWGEncoding.utf8.matches("UTF8"))
+    #expect(WHATWGEncoding.utf8.matches("x-unicode20utf8"))
+    #expect(!WHATWGEncoding.utf8.matches("UTF-81"))
+
+    #expect(WHATWGEncoding.windows1252.matches("US-ASCII"))
+    #expect(WHATWGEncoding.windows1252.matches("ISO_8859-1"))
+    #expect(!WHATWGEncoding.windows1252.matches("windows-1251"))
+  }
 }
