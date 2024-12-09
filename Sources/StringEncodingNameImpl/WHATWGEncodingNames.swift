@@ -24,7 +24,7 @@ extension WHATWGEncoding {
   )
 
   /// WHATWG Encoding `ISO-8859-2`
-  static let iso88592 = WHATWGEncoding(
+  static let iso8859_2 = WHATWGEncoding(
     name: "ISO-8859-2",
     labels: [
       "csisolatin2",
@@ -40,7 +40,7 @@ extension WHATWGEncoding {
   )
 
   /// WHATWG Encoding `ISO-8859-3`
-  static let iso88593 = WHATWGEncoding(
+  static let iso8859_3 = WHATWGEncoding(
     name: "ISO-8859-3",
     labels: [
       "csisolatin3",
@@ -56,7 +56,7 @@ extension WHATWGEncoding {
   )
 
   /// WHATWG Encoding `ISO-8859-4`
-  static let iso88594 = WHATWGEncoding(
+  static let iso8859_4 = WHATWGEncoding(
     name: "ISO-8859-4",
     labels: [
       "csisolatin4",
@@ -72,7 +72,7 @@ extension WHATWGEncoding {
   )
 
   /// WHATWG Encoding `ISO-8859-5`
-  static let iso88595 = WHATWGEncoding(
+  static let iso8859_5 = WHATWGEncoding(
     name: "ISO-8859-5",
     labels: [
       "csisolatincyrillic",
@@ -87,7 +87,7 @@ extension WHATWGEncoding {
   )
 
   /// WHATWG Encoding `ISO-8859-6`
-  static let iso88596 = WHATWGEncoding(
+  static let iso8859_6 = WHATWGEncoding(
     name: "ISO-8859-6",
     labels: [
       "arabic",
@@ -108,7 +108,7 @@ extension WHATWGEncoding {
   )
 
   /// WHATWG Encoding `ISO-8859-7`
-  static let iso88597 = WHATWGEncoding(
+  static let iso8859_7 = WHATWGEncoding(
     name: "ISO-8859-7",
     labels: [
       "csisolatingreek",
@@ -127,7 +127,7 @@ extension WHATWGEncoding {
   )
 
   /// WHATWG Encoding `ISO-8859-8`
-  static let iso88598 = WHATWGEncoding(
+  static let iso8859_8 = WHATWGEncoding(
     name: "ISO-8859-8",
     labels: [
       "csiso88598e",
@@ -145,7 +145,7 @@ extension WHATWGEncoding {
   )
 
   /// WHATWG Encoding `ISO-8859-8-I`
-  static let iso88598I = WHATWGEncoding(
+  static let iso8859_8I = WHATWGEncoding(
     name: "ISO-8859-8-I",
     labels: [
       "csiso88598i",
@@ -155,7 +155,7 @@ extension WHATWGEncoding {
   )
 
   /// WHATWG Encoding `ISO-8859-10`
-  static let iso885910 = WHATWGEncoding(
+  static let iso8859_10 = WHATWGEncoding(
     name: "ISO-8859-10",
     labels: [
       "csisolatin6",
@@ -169,7 +169,7 @@ extension WHATWGEncoding {
   )
 
   /// WHATWG Encoding `ISO-8859-13`
-  static let iso885913 = WHATWGEncoding(
+  static let iso8859_13 = WHATWGEncoding(
     name: "ISO-8859-13",
     labels: [
       "iso-8859-13",
@@ -179,7 +179,7 @@ extension WHATWGEncoding {
   )
 
   /// WHATWG Encoding `ISO-8859-14`
-  static let iso885914 = WHATWGEncoding(
+  static let iso8859_14 = WHATWGEncoding(
     name: "ISO-8859-14",
     labels: [
       "iso-8859-14",
@@ -189,7 +189,7 @@ extension WHATWGEncoding {
   )
 
   /// WHATWG Encoding `ISO-8859-15`
-  static let iso885915 = WHATWGEncoding(
+  static let iso8859_15 = WHATWGEncoding(
     name: "ISO-8859-15",
     labels: [
       "csisolatin9",
@@ -202,7 +202,7 @@ extension WHATWGEncoding {
   )
 
   /// WHATWG Encoding `ISO-8859-16`
-  static let iso885916 = WHATWGEncoding(
+  static let iso8859_16 = WHATWGEncoding(
     name: "ISO-8859-16",
     labels: [
       "iso-8859-16",

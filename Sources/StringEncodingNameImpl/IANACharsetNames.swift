@@ -18,7 +18,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-1`
-  static let iso88591 = IANACharset(
+  static let iso8859_1 = IANACharset(
     preferredMIMEName: "ISO-8859-1",
     name: "ISO_8859-1:1987",
     aliases: [
@@ -34,7 +34,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-2`
-  static let iso88592 = IANACharset(
+  static let iso8859_2 = IANACharset(
     preferredMIMEName: "ISO-8859-2",
     name: "ISO_8859-2:1987",
     aliases: [
@@ -48,7 +48,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-3`
-  static let iso88593 = IANACharset(
+  static let iso8859_3 = IANACharset(
     preferredMIMEName: "ISO-8859-3",
     name: "ISO_8859-3:1988",
     aliases: [
@@ -62,7 +62,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-4`
-  static let iso88594 = IANACharset(
+  static let iso8859_4 = IANACharset(
     preferredMIMEName: "ISO-8859-4",
     name: "ISO_8859-4:1988",
     aliases: [
@@ -76,7 +76,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-5`
-  static let iso88595 = IANACharset(
+  static let iso8859_5 = IANACharset(
     preferredMIMEName: "ISO-8859-5",
     name: "ISO_8859-5:1988",
     aliases: [
@@ -89,7 +89,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-6`
-  static let iso88596 = IANACharset(
+  static let iso8859_6 = IANACharset(
     preferredMIMEName: "ISO-8859-6",
     name: "ISO_8859-6:1987",
     aliases: [
@@ -104,7 +104,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-7`
-  static let iso88597 = IANACharset(
+  static let iso8859_7 = IANACharset(
     preferredMIMEName: "ISO-8859-7",
     name: "ISO_8859-7:1987",
     aliases: [
@@ -120,7 +120,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-8`
-  static let iso88598 = IANACharset(
+  static let iso8859_8 = IANACharset(
     preferredMIMEName: "ISO-8859-8",
     name: "ISO_8859-8:1988",
     aliases: [
@@ -133,7 +133,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-9`
-  static let iso88599 = IANACharset(
+  static let iso8859_9 = IANACharset(
     preferredMIMEName: "ISO-8859-9",
     name: "ISO_8859-9:1989",
     aliases: [
@@ -147,7 +147,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-10`
-  static let iso885910 = IANACharset(
+  static let iso8859_10 = IANACharset(
     preferredMIMEName: "ISO-8859-10",
     name: "ISO-8859-10",
     aliases: [
@@ -160,7 +160,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO_6937-2-add`
-  static let iso69372Add = IANACharset(
+  static let iso6937_2Add = IANACharset(
     preferredMIMEName: nil,
     name: "ISO_6937-2-add",
     aliases: [
@@ -277,7 +277,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `NS_4551-1`
-  static let ns45511 = IANACharset(
+  static let ns4551_1 = IANACharset(
     preferredMIMEName: nil,
     name: "NS_4551-1",
     aliases: [
@@ -290,7 +290,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `NF_Z_62-010`
-  static let nfZ62010 = IANACharset(
+  static let nfZ62_010 = IANACharset(
     preferredMIMEName: nil,
     name: "NF_Z_62-010",
     aliases: [
@@ -351,7 +351,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `NATS-SEFI-ADD`
-  static let natsSEFIADD = IANACharset(
+  static let natsSEFI_ADD = IANACharset(
     preferredMIMEName: nil,
     name: "NATS-SEFI-ADD",
     aliases: [
@@ -371,7 +371,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `NATS-DANO-ADD`
-  static let natsDANOADD = IANACharset(
+  static let natsDANO_ADD = IANACharset(
     preferredMIMEName: nil,
     name: "NATS-DANO-ADD",
     aliases: [
@@ -395,7 +395,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `KS_C_5601-1987`
-  static let ksC56011987 = IANACharset(
+  static let ksC5601_1987 = IANACharset(
     preferredMIMEName: nil,
     name: "KS_C_5601-1987",
     aliases: [
@@ -444,7 +444,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `JIS_C6220-1969-jp`
-  static let jisC62201969Jp = IANACharset(
+  static let jisC6220_1969Jp = IANACharset(
     preferredMIMEName: nil,
     name: "JIS_C6220-1969-jp",
     aliases: [
@@ -457,7 +457,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `JIS_C6220-1969-ro`
-  static let jisC62201969Ro = IANACharset(
+  static let jisC6220_1969Ro = IANACharset(
     preferredMIMEName: nil,
     name: "JIS_C6220-1969-ro",
     aliases: [
@@ -500,7 +500,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `NF_Z_62-010_(1973)`
-  static let nfZ620101973 = IANACharset(
+  static let nfZ62_010_1973 = IANACharset(
     preferredMIMEName: nil,
     name: "NF_Z_62-010_(1973)",
     aliases: [
@@ -531,7 +531,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `JIS_C6226-1978`
-  static let jisC62261978 = IANACharset(
+  static let jisC6226_1978 = IANACharset(
     preferredMIMEName: nil,
     name: "JIS_C6226-1978",
     aliases: [
@@ -581,7 +581,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO_5427:1981`
-  static let iso54271981 = IANACharset(
+  static let iso5427_1981 = IANACharset(
     preferredMIMEName: nil,
     name: "ISO_5427:1981",
     aliases: [
@@ -592,7 +592,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO_5428:1980`
-  static let iso54281980 = IANACharset(
+  static let iso5428_1980 = IANACharset(
     preferredMIMEName: nil,
     name: "ISO_5428:1980",
     aliases: [
@@ -602,7 +602,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `GB_1988-80`
-  static let gb198880 = IANACharset(
+  static let gb1988_80 = IANACharset(
     preferredMIMEName: nil,
     name: "GB_1988-80",
     aliases: [
@@ -614,7 +614,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `GB_2312-80`
-  static let gb231280 = IANACharset(
+  static let gb2312_80 = IANACharset(
     preferredMIMEName: nil,
     name: "GB_2312-80",
     aliases: [
@@ -625,7 +625,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `NS_4551-2`
-  static let ns45512 = IANACharset(
+  static let ns4551_2 = IANACharset(
     preferredMIMEName: nil,
     name: "NS_4551-2",
     aliases: [
@@ -669,7 +669,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `MSZ_7795.3`
-  static let msz77953 = IANACharset(
+  static let msz7795_3 = IANACharset(
     preferredMIMEName: nil,
     name: "MSZ_7795.3",
     aliases: [
@@ -681,7 +681,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `JIS_C6226-1983`
-  static let jisC62261983 = IANACharset(
+  static let jisC6226_1983 = IANACharset(
     preferredMIMEName: nil,
     name: "JIS_C6226-1983",
     aliases: [
@@ -724,7 +724,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `JIS_C6229-1984-a`
-  static let jisC62291984A = IANACharset(
+  static let jisC6229_1984A = IANACharset(
     preferredMIMEName: nil,
     name: "JIS_C6229-1984-a",
     aliases: [
@@ -735,7 +735,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `JIS_C6229-1984-b`
-  static let jisC62291984B = IANACharset(
+  static let jisC6229_1984B = IANACharset(
     preferredMIMEName: nil,
     name: "JIS_C6229-1984-b",
     aliases: [
@@ -747,7 +747,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `JIS_C6229-1984-b-add`
-  static let jisC62291984BAdd = IANACharset(
+  static let jisC6229_1984BAdd = IANACharset(
     preferredMIMEName: nil,
     name: "JIS_C6229-1984-b-add",
     aliases: [
@@ -758,7 +758,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `JIS_C6229-1984-hand`
-  static let jisC62291984Hand = IANACharset(
+  static let jisC6229_1984Hand = IANACharset(
     preferredMIMEName: nil,
     name: "JIS_C6229-1984-hand",
     aliases: [
@@ -769,7 +769,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `JIS_C6229-1984-hand-add`
-  static let jisC62291984HandAdd = IANACharset(
+  static let jisC6229_1984HandAdd = IANACharset(
     preferredMIMEName: nil,
     name: "JIS_C6229-1984-hand-add",
     aliases: [
@@ -780,7 +780,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `JIS_C6229-1984-kana`
-  static let jisC62291984Kana = IANACharset(
+  static let jisC6229_1984Kana = IANACharset(
     preferredMIMEName: nil,
     name: "JIS_C6229-1984-kana",
     aliases: [
@@ -790,7 +790,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO_2033-1983`
-  static let iso20331983 = IANACharset(
+  static let iso2033_1983 = IANACharset(
     preferredMIMEName: nil,
     name: "ISO_2033-1983",
     aliases: [
@@ -801,7 +801,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ANSI_X3.110-1983`
-  static let ansiX31101983 = IANACharset(
+  static let ansiX3_110_1983 = IANACharset(
     preferredMIMEName: nil,
     name: "ANSI_X3.110-1983",
     aliases: [
@@ -813,7 +813,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `T.61-7bit`
-  static let t617Bit = IANACharset(
+  static let t61_7Bit = IANACharset(
     preferredMIMEName: nil,
     name: "T.61-7bit",
     aliases: [
@@ -823,7 +823,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `T.61-8bit`
-  static let t618Bit = IANACharset(
+  static let t61_8Bit = IANACharset(
     preferredMIMEName: nil,
     name: "T.61-8bit",
     aliases: [
@@ -845,7 +845,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `CSA_Z243.4-1985-1`
-  static let csaZ243419851 = IANACharset(
+  static let csaZ243_4_1985_1 = IANACharset(
     preferredMIMEName: nil,
     name: "CSA_Z243.4-1985-1",
     aliases: [
@@ -859,7 +859,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `CSA_Z243.4-1985-2`
-  static let csaZ243419852 = IANACharset(
+  static let csaZ243_4_1985_2 = IANACharset(
     preferredMIMEName: nil,
     name: "CSA_Z243.4-1985-2",
     aliases: [
@@ -872,7 +872,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `CSA_Z243.4-1985-gr`
-  static let csaZ24341985Gr = IANACharset(
+  static let csaZ243_4_1985Gr = IANACharset(
     preferredMIMEName: nil,
     name: "CSA_Z243.4-1985-gr",
     aliases: [
@@ -882,7 +882,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-6-E`
-  static let iso88596E = IANACharset(
+  static let iso8859_6E = IANACharset(
     preferredMIMEName: "ISO-8859-6-E",
     name: "ISO_8859-6-E",
     aliases: [
@@ -892,7 +892,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-6-I`
-  static let iso88596I = IANACharset(
+  static let iso8859_6I = IANACharset(
     preferredMIMEName: "ISO-8859-6-I",
     name: "ISO_8859-6-I",
     aliases: [
@@ -912,7 +912,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-8-E`
-  static let iso88598E = IANACharset(
+  static let iso8859_8E = IANACharset(
     preferredMIMEName: "ISO-8859-8-E",
     name: "ISO_8859-8-E",
     aliases: [
@@ -922,7 +922,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-8-I`
-  static let iso88598I = IANACharset(
+  static let iso8859_8I = IANACharset(
     preferredMIMEName: "ISO-8859-8-I",
     name: "ISO_8859-8-I",
     aliases: [
@@ -942,7 +942,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `JUS_I.B1.002`
-  static let jusIB1002 = IANACharset(
+  static let jusIB1_002 = IANACharset(
     preferredMIMEName: nil,
     name: "JUS_I.B1.002",
     aliases: [
@@ -955,7 +955,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `IEC_P27-1`
-  static let iecP271 = IANACharset(
+  static let iecP27_1 = IANACharset(
     preferredMIMEName: nil,
     name: "IEC_P27-1",
     aliases: [
@@ -965,7 +965,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `JUS_I.B1.003-serb`
-  static let jusIB1003Serb = IANACharset(
+  static let jusIB1_003Serb = IANACharset(
     preferredMIMEName: nil,
     name: "JUS_I.B1.003-serb",
     aliases: [
@@ -976,7 +976,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `JUS_I.B1.003-mac`
-  static let jusIB1003Mac = IANACharset(
+  static let jusIB1_003Mac = IANACharset(
     preferredMIMEName: nil,
     name: "JUS_I.B1.003-mac",
     aliases: [
@@ -998,7 +998,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `NC_NC00-10:81`
-  static let ncNC001081 = IANACharset(
+  static let ncNC00_10_81 = IANACharset(
     preferredMIMEName: nil,
     name: "NC_NC00-10:81",
     aliases: [
@@ -1010,7 +1010,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO_6937-2-25`
-  static let iso6937225 = IANACharset(
+  static let iso6937_2_25 = IANACharset(
     preferredMIMEName: nil,
     name: "ISO_6937-2-25",
     aliases: [
@@ -1020,7 +1020,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `GOST_19768-74`
-  static let gost1976874 = IANACharset(
+  static let gost19768_74 = IANACharset(
     preferredMIMEName: nil,
     name: "GOST_19768-74",
     aliases: [
@@ -1063,7 +1063,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `JIS_X0212-1990`
-  static let jisX02121990 = IANACharset(
+  static let jisX0212_1990 = IANACharset(
     preferredMIMEName: nil,
     name: "JIS_X0212-1990",
     aliases: [
@@ -1114,7 +1114,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `UNICODE-1-1-UTF-7`
-  static let unicode11UTF7 = IANACharset(
+  static let unicode1_1UTF7 = IANACharset(
     preferredMIMEName: nil,
     name: "UNICODE-1-1-UTF-7",
     aliases: [
@@ -1132,7 +1132,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-2022-CN-EXT`
-  static let iso2022CNEXT = IANACharset(
+  static let iso2022CN_EXT = IANACharset(
     preferredMIMEName: nil,
     name: "ISO-2022-CN-EXT",
     aliases: [
@@ -1150,7 +1150,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-13`
-  static let iso885913 = IANACharset(
+  static let iso8859_13 = IANACharset(
     preferredMIMEName: nil,
     name: "ISO-8859-13",
     aliases: [
@@ -1159,7 +1159,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-14`
-  static let iso885914 = IANACharset(
+  static let iso8859_14 = IANACharset(
     preferredMIMEName: nil,
     name: "ISO-8859-14",
     aliases: [
@@ -1174,7 +1174,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-15`
-  static let iso885915 = IANACharset(
+  static let iso8859_15 = IANACharset(
     preferredMIMEName: nil,
     name: "ISO-8859-15",
     aliases: [
@@ -1185,7 +1185,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-16`
-  static let iso885916 = IANACharset(
+  static let iso8859_16 = IANACharset(
     preferredMIMEName: nil,
     name: "ISO-8859-16",
     aliases: [
@@ -1220,7 +1220,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `OSD_EBCDIC_DF04_15`
-  static let osdEBCDICDF0415 = IANACharset(
+  static let osdEBCDICDF04_15 = IANACharset(
     preferredMIMEName: nil,
     name: "OSD_EBCDIC_DF04_15",
     aliases: [
@@ -1238,7 +1238,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `OSD_EBCDIC_DF04_1`
-  static let osdEBCDICDF041 = IANACharset(
+  static let osdEBCDICDF04_1 = IANACharset(
     preferredMIMEName: nil,
     name: "OSD_EBCDIC_DF04_1",
     aliases: [
@@ -1247,7 +1247,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-11548-1`
-  static let iso115481 = IANACharset(
+  static let iso11548_1 = IANACharset(
     preferredMIMEName: nil,
     name: "ISO-11548-1",
     aliases: [
@@ -1360,7 +1360,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `UNICODE-1-1`
-  static let unicode11 = IANACharset(
+  static let unicode1_1 = IANACharset(
     preferredMIMEName: nil,
     name: "UNICODE-1-1",
     aliases: [
@@ -1470,7 +1470,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-1-Windows-3.0-Latin-1`
-  static let iso88591Windows30Latin1 = IANACharset(
+  static let iso8859_1Windows3_0Latin1 = IANACharset(
     preferredMIMEName: nil,
     name: "ISO-8859-1-Windows-3.0-Latin-1",
     aliases: [
@@ -1479,7 +1479,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-1-Windows-3.1-Latin-1`
-  static let iso88591Windows31Latin1 = IANACharset(
+  static let iso8859_1Windows3_1Latin1 = IANACharset(
     preferredMIMEName: nil,
     name: "ISO-8859-1-Windows-3.1-Latin-1",
     aliases: [
@@ -1488,7 +1488,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-2-Windows-Latin-2`
-  static let iso88592WindowsLatin2 = IANACharset(
+  static let iso8859_2WindowsLatin2 = IANACharset(
     preferredMIMEName: nil,
     name: "ISO-8859-2-Windows-Latin-2",
     aliases: [
@@ -1497,7 +1497,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `ISO-8859-9-Windows-Latin-5`
-  static let iso88599WindowsLatin5 = IANACharset(
+  static let iso8859_9WindowsLatin5 = IANACharset(
     preferredMIMEName: nil,
     name: "ISO-8859-9-Windows-Latin-5",
     aliases: [
@@ -2133,7 +2133,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `EBCDIC-AT-DE`
-  static let ebcdicATDE = IANACharset(
+  static let ebcdicAT_DE = IANACharset(
     preferredMIMEName: nil,
     name: "EBCDIC-AT-DE",
     aliases: [
@@ -2142,7 +2142,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `EBCDIC-AT-DE-A`
-  static let ebcdicATDEA = IANACharset(
+  static let ebcdicAT_DE_A = IANACharset(
     preferredMIMEName: nil,
     name: "EBCDIC-AT-DE-A",
     aliases: [
@@ -2151,7 +2151,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `EBCDIC-CA-FR`
-  static let ebcdicCAFR = IANACharset(
+  static let ebcdicCA_FR = IANACharset(
     preferredMIMEName: nil,
     name: "EBCDIC-CA-FR",
     aliases: [
@@ -2160,7 +2160,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `EBCDIC-DK-NO`
-  static let ebcdicDKNO = IANACharset(
+  static let ebcdicDK_NO = IANACharset(
     preferredMIMEName: nil,
     name: "EBCDIC-DK-NO",
     aliases: [
@@ -2169,7 +2169,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `EBCDIC-DK-NO-A`
-  static let ebcdicDKNOA = IANACharset(
+  static let ebcdicDK_NO_A = IANACharset(
     preferredMIMEName: nil,
     name: "EBCDIC-DK-NO-A",
     aliases: [
@@ -2178,7 +2178,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `EBCDIC-FI-SE`
-  static let ebcdicFISE = IANACharset(
+  static let ebcdicFI_SE = IANACharset(
     preferredMIMEName: nil,
     name: "EBCDIC-FI-SE",
     aliases: [
@@ -2187,7 +2187,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `EBCDIC-FI-SE-A`
-  static let ebcdicFISEA = IANACharset(
+  static let ebcdicFI_SE_A = IANACharset(
     preferredMIMEName: nil,
     name: "EBCDIC-FI-SE-A",
     aliases: [
@@ -2232,7 +2232,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `EBCDIC-ES-A`
-  static let ebcdicESA = IANACharset(
+  static let ebcdicES_A = IANACharset(
     preferredMIMEName: nil,
     name: "EBCDIC-ES-A",
     aliases: [
@@ -2241,7 +2241,7 @@ extension IANACharset {
   )
 
   /// IANA Characater Set `EBCDIC-ES-S`
-  static let ebcdicESS = IANACharset(
+  static let ebcdicES_S = IANACharset(
     preferredMIMEName: nil,
     name: "EBCDIC-ES-S",
     aliases: [
