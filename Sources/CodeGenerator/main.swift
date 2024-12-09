@@ -9,9 +9,20 @@ let repoRoot = URL(
 let assetsDir = repoRoot.appendingPathComponent("assets")
 let ianaJSONPath = assetsDir.appendingPathComponent("ianaCharacterSets.json")
 let whatwgJSONPath = assetsDir.appendingPathComponent("whatwgEncodings.json")
+let sourcesDir = repoRoot.appendingPathComponent("Sources")
+let implSourceDir = sourcesDir.appendingPathComponent("StringEncodingNameImpl")
+let ianaSwiftPath = implSourceDir.appendingPathComponent("IANACharsetNames.swift")
+let whatwgSwiftPath = implSourceDir.appendingPathComponent("WHATWGEncodingNames.swift")
 
 guard ianaJSONPath.isExistingLocalFile && whatwgJSONPath.isExistingLocalFile else {
   fatalError("Missing required files. Run `get-assets.zsh` first.")
+}
+
+let doWrite = CommandLine.arguments.contains("--write")
+
+func printToStderr(_ message: String) {
+  var stderr = FileHandle.standardError
+  print(message, to: &stderr)
 }
 
 extension IANACharset: Decodable {
@@ -66,6 +77,7 @@ let whatwgEncodingInfoList: [WHATWGEncodingCategorizedList] = try JSONDecoder().
 
 // Generate code for IANA charsets
 var ianaCharsetCode = String.Composition()
+ianaCharsetCode.omitSpacesInEmptyPayloadLine = true
 for charset in ianaCharsetInfoList {
   let identifier = charset.representativeName.lowerCamelCase
   ianaCharsetCode.append("/// IANA Characater Set `\(charset.representativeName)`")
@@ -74,7 +86,7 @@ for charset in ianaCharsetInfoList {
   ianaCharsetCode.append("name: \(charset.name.debugDescription),", indentLevel: 1)
   ianaCharsetCode.append("aliases: [", indentLevel: 1)
   for alias in charset.aliases {
-    ianaCharsetCode.append("\(alias.debugDescription), ", indentLevel: 2)
+    ianaCharsetCode.append("\(alias.debugDescription),", indentLevel: 2)
   }
   ianaCharsetCode.append("]", indentLevel: 1)
   ianaCharsetCode.append(")")
@@ -83,11 +95,17 @@ for charset in ianaCharsetInfoList {
 ianaCharsetCode.shiftRight()
 ianaCharsetCode.insert("extension IANACharset {", at: 0)
 ianaCharsetCode.append("}")
-print(ianaCharsetCode)
+if doWrite {
+  printToStderr("Writing to \(ianaSwiftPath.absoluteString)")
+  try Data(ianaCharsetCode.description.utf8).write(to: ianaSwiftPath)
+} else {
+  print(ianaCharsetCode)
+}
 
 
 // Generate code for WHATWG encodings
 var whatwgEncodingCode = String.Composition()
+whatwgEncodingCode.omitSpacesInEmptyPayloadLine = true
 for encoding in whatwgEncodingInfoList.flatMap(\.encodings) where encoding.name != "x-user-defined" {
   let identifier = encoding.name.lowerCamelCase
   whatwgEncodingCode.append("/// WHATWG Encoding `\(encoding.name)`")
@@ -104,4 +122,15 @@ for encoding in whatwgEncodingInfoList.flatMap(\.encodings) where encoding.name 
 whatwgEncodingCode.shiftRight()
 whatwgEncodingCode.insert("extension WHATWGEncoding {", at: 0)
 whatwgEncodingCode.append("}")
-print(whatwgEncodingCode)
+if doWrite {
+  printToStderr("Writing to \(whatwgSwiftPath.absoluteString)")
+  try Data(whatwgEncodingCode.description.utf8).write(to: whatwgSwiftPath)
+} else {
+  print(whatwgEncodingCode)
+}
+
+
+
+if doWrite {
+  printToStderr("Done.")
+}

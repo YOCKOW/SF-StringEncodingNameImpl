@@ -24,7 +24,7 @@ let package = Package(
     )
   ],
   dependencies: [
-    .package(url: "https://github.com/YOCKOW/SwiftStringComposition.git", from: "2.1.0"),
+    .package(url: "https://github.com/YOCKOW/SwiftStringComposition.git", from: "2.2.0"),
     .package(url: "https://github.com/YOCKOW/ySwiftExtensions.git", from: "1.11.1"),
   ],
   targets: [

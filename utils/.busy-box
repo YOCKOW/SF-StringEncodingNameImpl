@@ -1,0 +1,81 @@
+#!/usr/bin/env zsh
+
+set -eu
+
+local -r commandName="$(basename "$0")"
+local -r -a commandArguments=($@)
+
+local -r utilsDir="$(cd "$(dirname "$0")" && pwd)"
+local -r projectDir="$(dirname "$utilsDir")"
+local -r assetsDir="${projectDir}/assets"
+mkdir -p "$assetsDir"
+
+function __checkCommand() {
+  local -r commandName="${1-}"
+  local -r formulaeName="${2-}"
+  if ! command -v "$commandName" 1>/dev/null; then
+    echo "⚠️ '${commandName}' not found." 1>&2
+    if [[ -n "$formulaeName" ]]; then
+      echo "🍺 Try 'brew install ${formulaeName}'" 1>&2
+    fi
+    return 1
+  fi
+}
+
+function get-assets() {
+  __checkCommand curl curl
+  __checkCommand csvjson csvkit
+
+  local -r ianaCharSetCSVRemoteURL="https://www.iana.org/assignments/character-sets/character-sets-1.csv"
+  local -r ianaCharSetCSVLocalPath="${assetsDir}/iana-character-sets-1.csv"
+  local -r ianaCharSetJSONLocalPath="${assetsDir}/ianaCharacterSets.json"
+
+  local -r whatwgEncodingsJSONRemoteURL="https://encoding.spec.whatwg.org/encodings.json"
+  local -r whatwgEncodingsJSONLocalPath="${assetsDir}/whatwgEncodings.json"
+
+  set -x
+  curl --fail --silent "$ianaCharSetCSVRemoteURL" >"$ianaCharSetCSVLocalPath"
+  csvjson -i 2 "$ianaCharSetCSVLocalPath" >"$ianaCharSetJSONLocalPath"
+  curl --fail --silent "$whatwgEncodingsJSONRemoteURL" >"$whatwgEncodingsJSONLocalPath"
+  { set +x; } 2>/dev/null
+}
+
+function update-code() {
+  local -A parsedArguments=()
+  zparseopts -D -A parsedArguments -- -scratch-path: --package-path:
+
+  if [[ -n "${parsedArguments[(i)-package-path]}" ]]; then
+    echo "Can't specify the package path." 1>&2
+    return 1
+  fi
+
+  local scratchPath=""
+  if [[ -n "${parsedArguments[(i)-scratch-path]}" ]]; then
+    scratchPath="${parsedArguments[--scratch-path]}"
+  elif [[ $(( "${YOCKOW_USE_LOCAL_PACKAGES-0}" + 0 )) -gt 0 ]] && [[ -d "$HOME/.yswift-build" ]]; then
+    scratchPath="$HOME/.yswift-build"
+  fi
+
+  local -a swiftArguments=($@)
+  if [[ -n "$scratchPath" ]]; then
+    swiftArguments=(--scratch-path "$scratchPath" $swiftArguments)
+  fi
+
+  get-assets
+
+  set -x
+  swift run --package-path "$projectDir" $swiftArguments CodeGenerator --write
+  { set +x; } 2>/dev/null
+}
+
+
+case "$commandName" in
+get-assets | update-code)
+  "$commandName" $commandArguments
+;;
+
+*)
+  echo "Unexpected command name: $commandName" 1>&2
+  exit 1
+;;
+esac
