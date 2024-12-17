@@ -22,6 +22,21 @@ function __checkCommand() {
   fi
 }
 
+function dot-to-svg() {
+  __checkCommand dot graphviz
+
+  local dotFilePath
+  for dotFilePath in "$projectDir"/*/**.(dot|gv); do
+    function () {
+      local -r withoutExt="$(echo $dotFilePath(:r))"
+      local -r svgFilePath="$withoutExt.svg"
+      set -x
+      dot -Tsvg "$dotFilePath" -o "$svgFilePath"
+      { set +x; } 2>/dev/null
+    }
+  done
+}
+
 function get-assets() {
   __checkCommand curl curl
   __checkCommand csvjson csvkit
@@ -70,7 +85,7 @@ function update-code() {
 
 
 case "$commandName" in
-get-assets | update-code)
+dot-to-svg | get-assets | update-code)
   "$commandName" $commandArguments
 ;;
 
