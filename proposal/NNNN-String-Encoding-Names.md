@@ -128,7 +128,9 @@ As shown by the graph of `String.Encoding`-Name conversions below, they are inco
 
 [^your-purpose]: You may just want to parse an old XML document on local.
 
-![Graph of Encodings ↔︎ Names](./NNNN-String-Encoding-Names_Mapping.svg)
+![Graph of Encodings ↔︎ Names](./NNNN-String-Encoding-Names_Mapping.svg) [^utf-16-foundation]
+
+[^utf-16-foundation]: Foundation assumes UTF-16 without BOM is big endian when decoding.
 
 
 ### `String.Encoding` to Name
