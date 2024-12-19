@@ -133,7 +133,7 @@ As shown by the graph of `String.Encoding`-Name conversions below, they are inco
 
 ### `String.Encoding` to Name
 
-- Upper-case letters may be used.
+- Upper-case letters may be used unlike CF.
   * `charsetName` returns *Preferred MIME Name* or *Name* of the encoding defined in "IANA Character Sets".
   * `standardName` returns *Name* of the encoding defined by "The Encoding Standard".
 - `String.Encoding.shiftJIS.charsetName[standardName]` returns "Shift_JIS" since "CP932" is no longer available for a name of any encodings.
