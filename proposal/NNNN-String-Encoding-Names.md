@@ -13,7 +13,7 @@
 
 ## Introduction
 
-This proposal lets `String.Encoding` be converted to/from _various_ names.
+This proposal allows `String.Encoding` to be converted to and from various names.
 
 For example:
 
@@ -30,15 +30,14 @@ print(String.Encoding(standardName: "us-ascii") == .windowsCP1252) // Prints "tr
 
 ## Motivation
 
-The names for string encodings are commonly used certainly in computer networking and in other areas.
-You will often find them, for instance, in HTTP headers such as `Content-Type: text/plain; charset=UTF-8` ("UTF-8" is the one). You will also find them in XML documents such as `<?xml version="1.0" encoding="Shift_JIS" ?>` ("Shift_JIS" is the one).
+String encoding names are widely used in computer networking and other areas. For instance, you often see them in HTTP headers such as `Content-Type: text/plain; charset=UTF-8` or in XML documents with declarations such as `<?xml version="1.0" encoding="Shift_JIS"?>`.
 
-As a natural consequence, it is necessary to parse and to generate such names.
+Therefore, it is necessary to parse and generate such names.
 
 
 ### Current solution
 
-Swift is missing such APIs, therefore we have to use functions defined in `CoreFoundation` (hereinafter called "CF") described as below.
+Swift lacks the necessary APIs, requiring the use of `CoreFoundation` (hereinafter called "CF") as described below.
 
 ```swift
 extension String.Encoding {
@@ -94,14 +93,14 @@ extension String.Encoding {
 ### What's the problem of the current solution?
 
 - It is complicated to use multiple CF-functions to get a simple value. That's not *Swifty*.
-- CF-functions are legacy APIs that don't sometimes fit with the times.
+- CF functions are legacy APIs that do not always fit with modern requirements.
 - CF APIs are officially unavailable from Swift on non-Darwin platforms.
 
 
 ## Proposed solution
 
-Solution is simple.
-We introduce computed properties that return the name, and initializers that create an instance from the name as below.
+The solution is straightforward.
+We introduce computed properties that return the name, and initializers that create an instance from the name as shown below.
 
 ```swift
 extension String.Encoding {
@@ -124,11 +123,13 @@ extension String.Encoding {
 
 This proposal refers to "[Character Sets](https://www.iana.org/assignments/character-sets/character-sets.xhtml)" published by IANA and to "[The Encoding Standard](https://encoding.spec.whatwg.org/)" published by WHATWG. While the latter may claim the former could be replaced with it, it entirely focuses on Web browsers (and their JavaScript APIs).
 
-As shown by the graph of `String.Encoding`-Name conversions below, they are incompatible and it is difficult to compromise. Although you may want to ask which is better, the answer is that it depends on your purpose[^your-purpose]. Since Swift APIs should be a little more universal, here we consult both.
+As shown in `String.Encoding`-Name conversion graph below, they are incompatible, making it difficult to compromise. Although you may want to ask which is better, the choice of which to use depends on your specific needs.[^your-specific-needs]. Since Swift APIs should be more universal, here we consult both.
 
-[^your-purpose]: You may just want to parse an old XML document on local.
+[^your-specific-needs]: You may just want to parse an old XML document on local.
 
-![Graph of Encodings ↔︎ Names](./NNNN-String-Encoding-Names_Mapping.svg) [^utf-16-foundation]
+![Graph of Encodings ↔︎ Names](./NNNN-String-Encoding-Names_Mapping.svg)
+*The graph of `String.Encoding`-Name conversions*
+[^utf-16-foundation]
 
 [^utf-16-foundation]: Foundation assumes UTF-16 without BOM is big endian when decoding.
 
@@ -146,7 +147,7 @@ As shown by the graph of `String.Encoding`-Name conversions below, they are inco
 - `init(charsetName:)` adopts "Charset Alias Matching" defined in [UTX#22](https://www.unicode.org/reports/tr22/tr22-8.html#Charset_Alias_Matching).
   * i.g., "u.t.f-008" is recognized as "UTF-8".
 - `init(charsetName:)` behaves consistently about ISO-8859-*.
-  + For example, CF has inconsistency between "ISO-8859-1-Windows-3.1-Latin-1" and "csWindows31Latin1".
+  + For example, CF inconsistently handles "ISO-8859-1-Windows-3.1-Latin-1" and "csWindows31Latin1".
 - `init(standardName:)` adopts case-insensitive comparison described in [§4.2. Names and labels](https://encoding.spec.whatwg.org/#names-and-labels) of The Encoding Standard.
 
 
@@ -173,25 +174,25 @@ This feature can be freely adopted and un-adopted in source code with no deploym
 
 ### Expose APIs only for the IANA Character Sets
 
-Modern Web browsers have unfortunately deviated from the IANA's charset list. That means that it is better to adhere to the WHATWG Encoding Standard if you handle mainly web contents. We may often require some APIs for it.
+Modern Web browsers have unfortunately deviated from the IANA's charset list. That means that it is better to adhere to the WHATWG Encoding Standard if you handle mainly web contents. We often require "The Living Standard" to cover such use cases.
 
 
 ### Expose APIs only for the WHATWG Encoding Standard
 
-As mentioned above, the WHATWG Encoding Standard focuses on latest Web browsers. Therefore some problems occur in some cases.
+As mentioned above, the WHATWG Encoding Standard focuses on latest Web browsers. This can cause issues in some cases.
 
-Imagine handling an XML 1.1 file which declares that its encoding is "ISO-8859-1": `<?xml version="1.1" encoding="ISO-8859-1"?>`.   What if that file contains a byte `0x85`? `0x85` is recognized as `U+0085`(`NEL`) in ISO-8859-1 which is a valid end-of-line character in XML 1.1[^U+0085-in-xml].
+Imagine handling an XML 1.1 file declaring that its encoding is "ISO-8859-1": `<?xml version="1.1" encoding="ISO-8859-1"?>`. What if that file contains a byte `0x85`? `0x85` is recognized as `U+0085`(`NEL`) in ISO-8859-1 which is a valid end-of-line character in XML 1.1[^U+0085-in-xml].
 
 [^U+0085-in-xml]: https://www.w3.org/TR/xml11/#sec-line-ends
 
 On the other hand, the WHATWG Encoding Standard argues that "ISO-8859-1" label must be resolved as "windows-1252". A byte `0x85` is decoded to `U+2026`(`Horizontal Ellipsis`) in windows-1252 and that may cause fatal error to parse the XML file.
 
-We have to consult the IANA registry in that case.
+In such cases, consulting the IANA registry is necessary.
 
 
 ### Consolidate them
 
-We might be able to consolidate them in one kind of API like this:
+We might be able to consolidate them into a single kind of API like this:
 
 ```swift
 extension String.Encoding {
@@ -200,10 +201,10 @@ extension String.Encoding {
 }
 ```
 
-However, that will be too arbitrary to implement such API and too hard to maintain consistent behavior.
+However, this approach would be too arbitrary and too difficult to maintain consistent behavior.
 
 
-### Follow `Locale` as the precedent
+### Follow `Locale` as precedent
 
 `Locale` has an enum named [`IdentifierType`](https://developer.apple.com/documentation/foundation/locale/identifiertype) to specify which kind of identifier should be used.
 We can apply that way to `String.Encoding`:
@@ -215,7 +216,7 @@ extension String.Encoding {
     case whatwg
   }
   public var name(_ type: NameType) -> String?
-  public init?(name: String, _ type: NameType)
+  public init?(name: String, type: NameType)
 }
 ```
 
