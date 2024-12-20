@@ -123,7 +123,7 @@ extension String.Encoding {
 
 This proposal refers to "[Character Sets](https://www.iana.org/assignments/character-sets/character-sets.xhtml)" published by IANA and to "[The Encoding Standard](https://encoding.spec.whatwg.org/)" published by WHATWG. While the latter may claim the former could be replaced with it, it entirely focuses on Web browsers (and their JavaScript APIs).
 
-As shown in `String.Encoding`-Name conversion graph below, they are incompatible, making it difficult to compromise. Although you may want to ask which is better, the choice of which to use depends on your specific needs.[^your-specific-needs]. Since Swift APIs should be more universal, here we consult both.
+As shown in `String.Encoding`-Name conversion graph below, they are incompatible, making it difficult to compromise. Although you may want to ask which is better, the choice of which to use depends on your specific needs[^your-specific-needs]. Since Swift APIs should be more universal, here we consult both.
 
 [^your-specific-needs]: You may just want to parse an old XML document on local.
 
