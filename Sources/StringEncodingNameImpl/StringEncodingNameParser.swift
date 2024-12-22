@@ -33,18 +33,78 @@ private extension String {
   }
 }
 
-/// ICU-independent String Encoding Name Parser.
-class StringEncodingNameParser {
+protocol StringEncodingNameTokenizer {
+  associatedtype Token: Equatable
+
+  /// Returns the next token advancing the index.
+  func nextToken(
+    of scalars: Substring.UnicodeScalarView,
+    fromIndex index: inout Substring.UnicodeScalarView.Index
+  ) -> Token?
+}
+
+struct IANACharsetNameTokenizer: StringEncodingNameTokenizer {
   enum Token: Equatable {
     case numeric(Int)
-    case caseInsensitiveASCIIAlphabet(Unicode.Scalar)
-    case other(Unicode.Scalar)
+    case alphabet(Unicode.Scalar)
 
     static func ==(lhs: Token, rhs: Token) -> Bool {
       switch (lhs, rhs) {
       case (.numeric(let lN), .numeric(let rN)):
         return lN == rN
-      case (.caseInsensitiveASCIIAlphabet(let lA), .caseInsensitiveASCIIAlphabet(let rA)):
+      case (.alphabet(let lA), .alphabet(let rA)):
+        return lA._isCaseInsensitivelyEqual(to: rA)
+      default:
+        return false
+      }
+    }
+  }
+
+  @inlinable
+  func nextToken(
+    of scalars: Substring.UnicodeScalarView,
+    fromIndex index: inout Substring.UnicodeScalarView.Index
+  ) -> Token? {
+    assert(index < scalars.endIndex)
+
+    func __parseNumeric() -> Int {
+      var value: Int = 0
+      while index < scalars.endIndex {
+        let currentScalar = scalars[index]
+        guard ("0"..."9").contains(currentScalar) else {
+          break
+        }
+        value = value * 10 + currentScalar._asciiNumericValue
+        scalars.formIndex(after: &index)
+      }
+      return value
+    }
+
+    let scalar = scalars[index]
+    switch scalar {
+    case "0"..."9":
+      return .numeric(__parseNumeric())
+    case "A"..."Z", "a"..."z":
+      scalars.formIndex(after: &index)
+      return .alphabet(scalar)
+    default:
+      scalars.formIndex(after: &index)
+      if index < scalars.endIndex {
+        return nextToken(of: scalars, fromIndex: &index)
+      }
+      return nil
+    }
+  }
+}
+
+struct WHATWGEncodingNameTokenizer: StringEncodingNameTokenizer {
+  enum Token: Equatable {
+    case alphabet(Unicode.Scalar)
+    case other(Unicode.Scalar)
+
+    static func ==(lhs: Token, rhs: Token) -> Bool {
+      switch (lhs, rhs) {
+      case (.alphabet(let lA), .alphabet(let rA)):
         return lA._isCaseInsensitivelyEqual(to: rA)
       case (.other(let lO), .other(let rO)):
         return lO == rO
@@ -54,84 +114,49 @@ class StringEncodingNameParser {
     }
   }
 
+  @inlinable
+  func nextToken(
+    of scalars: Substring.UnicodeScalarView,
+    fromIndex index: inout Substring.UnicodeScalarView.Index
+  ) -> Token? {
+    assert(index < scalars.endIndex)
+
+    defer {
+      scalars.formIndex(after: &index)
+    }
+
+    let scalar = scalars[index]
+    switch scalar {
+    case "A"..."Z", "a"..."z":
+      return .alphabet(scalar)
+    default:
+      return .other(scalar)
+    }
+  }
+}
+
+
+
+/// ICU-independent String Encoding Name Parser.
+class StringEncodingNameParser<Tokenizer> where Tokenizer: StringEncodingNameTokenizer {
   let scalars: Substring.UnicodeScalarView
 
-  var currentIndex: Substring.UnicodeScalarView.Index
+  private(set) var currentIndex: Substring.UnicodeScalarView.Index
 
-  let nameType: String.Encoding.NameType
+  let tokenizer: Tokenizer
 
-  init(_ name: String, nameType: String.Encoding.NameType) {
+  init(name: String, tokenizer: Tokenizer) {
     self.scalars = name._trimmed.unicodeScalars
     self.currentIndex = scalars.startIndex
-    self.nameType = nameType
+    self.tokenizer = tokenizer
   }
 
-  /// Returns the next token.
-  ///
-  /// If `variant` is
-  ///  - `ianaCharset`: this parser follows ["Charset Alias Matching"](https://www.unicode.org/reports/tr22/tr22-8.html#Charset_Alias_Matching)
-  ///                   rule defined in UTS#22.
-  ///  - `whatwgEncoding`: this parser uses just ASCII case-insensitive match.
-  func nextToken() -> Token? {
+  @inlinable
+  func nextToken() -> Tokenizer.Token? {
     guard currentIndex < scalars.endIndex else {
       return nil
     }
-
-    func __advance() {
-      currentIndex = scalars.index(after: currentIndex)
-    }
-
-    /// Parse the string as IANA charset.
-    func __nextIANACharsetToken() -> Token? {
-      func __parseNumeric() -> Int {
-        var value: Int = 0
-        while currentIndex < scalars.endIndex {
-          let currentScalar = scalars[currentIndex]
-          guard ("0"..."9").contains(currentScalar) else {
-            break
-          }
-          value = value * 10 + currentScalar._asciiNumericValue
-          __advance()
-        }
-        return value
-      }
-
-      let scalar = scalars[currentIndex]
-      switch scalar {
-      case "0"..."9":
-        return .numeric(__parseNumeric())
-      case "A"..."Z", "a"..."z":
-        __advance()
-        return .caseInsensitiveASCIIAlphabet(scalar)
-      default:
-        __advance()
-        if currentIndex < scalars.endIndex {
-          return __nextIANACharsetToken()
-        }
-        return nil
-      }
-    }
-
-    /// Parse the string as WHATWG Encoding Standard.
-    func __nextWHATWGStandardToken() -> Token? {
-      let scalar = scalars[currentIndex]
-      __advance()
-      switch scalar {
-      case "0"..."9":
-        return .numeric(scalar._asciiNumericValue)
-      case "A"..."Z", "a"..."z":
-        return .caseInsensitiveASCIIAlphabet(scalar)
-      default:
-        return .other(scalar)
-      }
-    }
-
-    switch nameType {
-    case .iana:
-      return __nextIANACharsetToken()
-    case .whatwg:
-      return __nextWHATWGStandardToken()
-    }
+    return tokenizer.nextToken(of: scalars, fromIndex: &currentIndex)
   }
 }
 
@@ -140,17 +165,36 @@ extension String {
     to other: String,
     asStringEncodingNameOf type: String.Encoding.NameType
   ) -> Bool {
-    let myParser = StringEncodingNameParser(self, nameType: type)
-    let otherParser = StringEncodingNameParser(other, nameType: type)
-    while true {
-      let myToken = myParser.nextToken()
-      let otherToken = otherParser.nextToken()
-      guard myToken == otherToken else {
-        return false
+    func __equalTokens<T>(
+      _ leftParser: StringEncodingNameParser<T>,
+      _ rightParser: StringEncodingNameParser<T>
+    ) -> Bool where T: StringEncodingNameTokenizer {
+      while true {
+        let leftToken = leftParser.nextToken()
+        let rightToken = rightParser.nextToken()
+        guard leftToken == rightToken else {
+          return false
+        }
+        if leftToken == nil { // End of the strings.
+          assert(rightToken == nil)
+          return true
+        }
       }
-      if myToken == nil { // End of the strings.
-        return true
-      }
+    }
+
+    switch type {
+    case .iana:
+      let tokenizer = IANACharsetNameTokenizer()
+      return __equalTokens(
+        StringEncodingNameParser(name: self, tokenizer: tokenizer),
+        StringEncodingNameParser(name: other, tokenizer: tokenizer)
+      )
+    case .whatwg:
+      let tokenizer = WHATWGEncodingNameTokenizer()
+      return __equalTokens(
+        StringEncodingNameParser(name: self, tokenizer: tokenizer),
+        StringEncodingNameParser(name: other, tokenizer: tokenizer)
+      )
     }
   }
 }

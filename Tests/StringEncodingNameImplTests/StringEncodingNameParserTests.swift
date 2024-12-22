@@ -3,22 +3,22 @@ import Testing
 
 @Suite struct StringEncodingNameParserTests {
   @Test func test_IANACharsetTokens() {
-    let parser = StringEncodingNameParser("u.t.f-008", nameType: .iana)
-    #expect(parser.nextToken() == .caseInsensitiveASCIIAlphabet("U"))
-    #expect(parser.nextToken() == .caseInsensitiveASCIIAlphabet("T"))
-    #expect(parser.nextToken() == .caseInsensitiveASCIIAlphabet("F"))
+    let parser = StringEncodingNameParser(name: "u.t.f-008", tokenizer: IANACharsetNameTokenizer())
+    #expect(parser.nextToken() == .alphabet("U"))
+    #expect(parser.nextToken() == .alphabet("T"))
+    #expect(parser.nextToken() == .alphabet("F"))
     #expect(parser.nextToken() == .numeric(8))
     #expect(parser.nextToken() == nil)
     #expect(parser.nextToken() == nil)
   }
 
   @Test func test_WHATWGEncodingStandard() {
-    let parser = StringEncodingNameParser("UTF-8", nameType: .whatwg)
-    #expect(parser.nextToken() == .caseInsensitiveASCIIAlphabet("u"))
-    #expect(parser.nextToken() == .caseInsensitiveASCIIAlphabet("t"))
-    #expect(parser.nextToken() == .caseInsensitiveASCIIAlphabet("f"))
+    let parser = StringEncodingNameParser(name: "UTF-8", tokenizer: WHATWGEncodingNameTokenizer())
+    #expect(parser.nextToken() == .alphabet("u"))
+    #expect(parser.nextToken() == .alphabet("t"))
+    #expect(parser.nextToken() == .alphabet("f"))
     #expect(parser.nextToken() == .other("-"))
-    #expect(parser.nextToken() == .numeric(8))
+    #expect(parser.nextToken() == .other("8"))
     #expect(parser.nextToken() == nil)
     #expect(parser.nextToken() == nil)
   }
