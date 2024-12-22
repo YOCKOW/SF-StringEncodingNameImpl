@@ -54,21 +54,16 @@ class StringEncodingNameParser {
     }
   }
 
-  enum Variant: Equatable {
-    case ianaCharset
-    case whatwgEncoding
-  }
-
   let scalars: Substring.UnicodeScalarView
 
   var currentIndex: Substring.UnicodeScalarView.Index
 
-  let variant: Variant
+  let nameType: String.Encoding.NameType
 
-  init(_ name: String, variant: Variant) {
+  init(_ name: String, nameType: String.Encoding.NameType) {
     self.scalars = name._trimmed.unicodeScalars
     self.currentIndex = scalars.startIndex
-    self.variant = variant
+    self.nameType = nameType
   }
 
   /// Returns the next token.
@@ -131,10 +126,10 @@ class StringEncodingNameParser {
       }
     }
 
-    switch variant {
-    case .ianaCharset:
+    switch nameType {
+    case .iana:
       return __nextIANACharsetToken()
-    case .whatwgEncoding:
+    case .whatwg:
       return __nextWHATWGStandardToken()
     }
   }
@@ -143,10 +138,10 @@ class StringEncodingNameParser {
 extension String {
   func isEqual(
     to other: String,
-    asStringEncodingNameOf variant: StringEncodingNameParser.Variant
+    asStringEncodingNameOf type: String.Encoding.NameType
   ) -> Bool {
-    let myParser = StringEncodingNameParser(self, variant: variant)
-    let otherParser = StringEncodingNameParser(other, variant: variant)
+    let myParser = StringEncodingNameParser(self, nameType: type)
+    let otherParser = StringEncodingNameParser(other, nameType: type)
     while true {
       let myToken = myParser.nextToken()
       let otherToken = otherParser.nextToken()

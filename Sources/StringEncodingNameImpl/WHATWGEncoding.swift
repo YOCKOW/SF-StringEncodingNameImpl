@@ -13,7 +13,7 @@ package struct WHATWGEncoding {
 
   func matches(_ string: String) -> Bool {
     for label in labels {
-      if label.isEqual(to: string, asStringEncodingNameOf: .whatwgEncoding) {
+      if label.isEqual(to: string, asStringEncodingNameOf: .whatwg) {
         return true
       }
     }
