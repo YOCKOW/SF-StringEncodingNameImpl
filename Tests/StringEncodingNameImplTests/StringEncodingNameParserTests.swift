@@ -2,31 +2,32 @@ import Testing
 @testable import StringEncodingNameImpl
 
 @Suite struct StringEncodingNameParserTests {
-  @Test func test_IANACharsetTokens() {
-    let parser = StringEncodingNameParser(name: "u.t.f-008", tokenizer: IANACharsetNameTokenizer())
-    #expect(parser.nextToken() == .alphabet("U"))
-    #expect(parser.nextToken() == .alphabet("T"))
-    #expect(parser.nextToken() == .alphabet("F"))
-    #expect(parser.nextToken() == .numeric(8))
-    #expect(parser.nextToken() == nil)
-    #expect(parser.nextToken() == nil)
+  @Test func test_IANACharsetTokens() throws {
+    var tokenizer = IANACharsetNameTokenizer(name: "u.t.f-008")
+    #expect(try tokenizer.nextToken() == .alphabet("U"))
+    #expect(try tokenizer.nextToken() == .alphabet("T"))
+    #expect(try tokenizer.nextToken() == .alphabet("F"))
+    #expect(try tokenizer.nextToken() == .numeric(8))
+    #expect(try tokenizer.nextToken() == nil)
+    #expect(try tokenizer.nextToken() == nil)
   }
 
-  @Test func test_WHATWGEncodingStandard() {
-    let parser = StringEncodingNameParser(name: "UTF-8", tokenizer: WHATWGEncodingNameTokenizer())
-    #expect(parser.nextToken() == .alphabet("u"))
-    #expect(parser.nextToken() == .alphabet("t"))
-    #expect(parser.nextToken() == .alphabet("f"))
-    #expect(parser.nextToken() == .other("-"))
-    #expect(parser.nextToken() == .other("8"))
-    #expect(parser.nextToken() == nil)
-    #expect(parser.nextToken() == nil)
+  @Test func test_WHATWGEncodingStandard() throws {
+    var tokenizer = WHATWGEncodingNameTokenizer(name: "UTF-8")
+    #expect(try tokenizer.nextToken() == "u")
+    #expect(try tokenizer.nextToken() == "t")
+    #expect(try tokenizer.nextToken() == "f")
+    #expect(try tokenizer.nextToken() == "-")
+    #expect(try tokenizer.nextToken() == "8")
+    #expect(try tokenizer.nextToken() == nil)
+    #expect(try tokenizer.nextToken() == nil)
   }
 
   @Test func test_StringEncodingNameEquality() {
     #expect("UTF-8".isEqual(to: "utf8", asStringEncodingNameOf: .iana))
     #expect("utf8".isEqual(to: "U@t!F%%%008", asStringEncodingNameOf: .iana))
     #expect(!"utf-8".isEqual(to: "utf-80", asStringEncodingNameOf: .iana))
+    #expect(!"euc-jp".isEqual(to: "euc-jp1234567890123456", asStringEncodingNameOf: .iana))
 
     #expect("UTF-8".isEqual(to: "uTf-8", asStringEncodingNameOf: .whatwg))
     #expect(!"UTF-8".isEqual(to: "utf8", asStringEncodingNameOf: .whatwg))
