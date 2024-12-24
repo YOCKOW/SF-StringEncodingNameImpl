@@ -9,13 +9,18 @@ let repoRoot = URL(
 let assetsDir = repoRoot.appendingPathComponent("assets")
 let ianaJSONPath = assetsDir.appendingPathComponent("ianaCharacterSets.json")
 let whatwgJSONPath = assetsDir.appendingPathComponent("whatwgEncodings.json")
+let whatwgLicensePath = assetsDir.appendingPathComponent("whatwgEncodingLicense.txt")
 let sourcesDir = repoRoot.appendingPathComponent("Sources")
 let implSourceDir = sourcesDir.appendingPathComponent("StringEncodingNameImpl")
 let ianaSwiftPath = implSourceDir.appendingPathComponent("IANACharsetNames.swift")
 let whatwgSwiftPath = implSourceDir.appendingPathComponent("WHATWGEncodingNames.swift")
 
-guard ianaJSONPath.isExistingLocalFile && whatwgJSONPath.isExistingLocalFile else {
-  fatalError("Missing required files. Run `get-assets.zsh` first.")
+guard (
+  ianaJSONPath.isExistingLocalFile &&
+  whatwgJSONPath.isExistingLocalFile &&
+  whatwgLicensePath.isExistingLocalFile
+) else {
+  fatalError("Missing required files. Run `utils/get-assets` first.")
 }
 
 let doWrite = CommandLine.arguments.contains("--write")
@@ -192,7 +197,23 @@ whatwgEncodingCode.insert("extension WHATWGEncoding {", at: 0)
 whatwgEncodingCode.append("}")
 if doWrite {
   printToStderr("Writing to \(whatwgSwiftPath.absoluteString)")
-  try Data(whatwgEncodingCode.description.utf8).write(to: whatwgSwiftPath)
+
+  let license = String(data: try Data(contentsOf: whatwgLicensePath), encoding: .utf8)!
+  let content = """
+  // This code was generated from a property that WHATWG published.
+  // The property was licensed under its license described below.
+  //
+  /* LICENSE
+  
+  \(license)
+  
+  */
+  
+  \(whatwgEncodingCode.description)
+  """
+
+
+  try Data(content.utf8).write(to: whatwgSwiftPath)
 } else {
   print(whatwgEncodingCode)
 }
