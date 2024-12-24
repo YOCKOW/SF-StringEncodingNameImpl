@@ -25,6 +25,45 @@ func printToStderr(_ message: String) {
   print(message, to: &stderr)
 }
 
+let requiredIANACharsets: [String] = [
+  "UTF-8",
+  "US-ASCII", "ISO_646.irv:1983",
+  "EUC-JP",
+  "ISO-8859-1",
+  "Adobe-Symbol-Encoding",
+  "Shift_JIS", "Windows-31J",
+  "ISO-8859-2",
+  "UTF-16", "ISO-10646-UCS-2", "UNICODE-1-1",
+  "windows-1251",
+  "windows-1252", "ISO-8859-1-Windows-3.0-Latin-1", "ISO-8859-1-Windows-3.1-Latin-1",
+  "windows-1253",
+  "windows-1254", "ISO-8859-9-Windows-Latin-5",
+  "windows-1250", "ISO-8859-2-Windows-Latin-2",
+  "ISO-2022-JP",
+  "macintosh",
+  "UTF-16BE",
+  "UTF-16LE",
+  "UTF-32", "ISO-10646-UCS-4",
+  "UTF-32BE",
+  "UTF-32LE",
+]
+
+let requiredWHATWGEncodings: [String] = [
+  "UTF-8",
+  "EUC-JP",
+  "Shift_JIS",
+  "ISO-8859-2",
+  "windows-1251",
+  "windows-1252",
+  "windows-1253",
+  "windows-1254",
+  "windows-1250",
+  "ISO-2022-JP",
+  "macintosh",
+  "UTF-16BE",
+  "UTF-16LE",
+]
+
 extension IANACharset: Decodable {
   enum Key: String, CodingKey {
     case preferredMIMEName = "Preferred MIME Name"
@@ -43,6 +82,15 @@ extension IANACharset: Decodable {
     }) ?? []
     self.init(preferredMIMEName: preferredMIMEName, name: name, aliases: aliases)
   }
+
+  var isRequired: Bool {
+    for req in requiredIANACharsets {
+      if self.matches(req) {
+        return true
+      }
+    }
+    return false
+  }
 }
 
 extension WHATWGEncoding: Decodable {
@@ -56,6 +104,15 @@ extension WHATWGEncoding: Decodable {
     let name = try container.decode(String.self, forKey: .name)
     let labels = try container.decode(Array<String>.self, forKey: .labels)
     self.init(name: name, labels: labels)
+  }
+
+  var isRequired: Bool {
+    for req in requiredWHATWGEncodings {
+      if self.matches(req) {
+        return true
+      }
+    }
+    return false
   }
 }
 
@@ -74,11 +131,16 @@ let whatwgEncodingInfoList: [WHATWGEncodingCategorizedList] = try JSONDecoder().
   from: Data(contentsOf: whatwgJSONPath)
 )
 
-
 // Generate code for IANA charsets
 var ianaCharsetCode = String.Composition()
 ianaCharsetCode.omitSpacesInEmptyPayloadLine = true
 for charset in ianaCharsetInfoList {
+  guard charset.isRequired else {
+    ianaCharsetCode.append("// SKIPPED: IANA Character Set `\(charset.representativeName)`")
+    ianaCharsetCode.appendEmptyLine()
+    continue
+  }
+
   let identifier = charset.representativeName.lowerCamelCase
   ianaCharsetCode.append("/// IANA Characater Set `\(charset.representativeName)`")
   ianaCharsetCode.append("static let \(identifier) = IANACharset(")
@@ -106,7 +168,13 @@ if doWrite {
 // Generate code for WHATWG encodings
 var whatwgEncodingCode = String.Composition()
 whatwgEncodingCode.omitSpacesInEmptyPayloadLine = true
-for encoding in whatwgEncodingInfoList.flatMap(\.encodings) where encoding.name != "x-user-defined" {
+for encoding in whatwgEncodingInfoList.flatMap(\.encodings) {
+  guard encoding.isRequired else {
+    whatwgEncodingCode.append("// SKIPPED: WHATWG Encoding `\(encoding.name)`")
+    whatwgEncodingCode.appendEmptyLine()
+    continue
+  }
+
   let identifier = encoding.name.lowerCamelCase
   whatwgEncodingCode.append("/// WHATWG Encoding `\(encoding.name)`")
   whatwgEncodingCode.append("static let \(identifier) = WHATWGEncoding(")

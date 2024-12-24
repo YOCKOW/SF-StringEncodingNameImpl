@@ -12,16 +12,7 @@ extension WHATWGEncoding {
     ]
   )
 
-  /// WHATWG Encoding `IBM866`
-  static let ibm866 = WHATWGEncoding(
-    name: "IBM866",
-    labels: [
-      "866",
-      "cp866",
-      "csibm866",
-      "ibm866",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `IBM866`
 
   /// WHATWG Encoding `ISO-8859-2`
   static let iso8859_2 = WHATWGEncoding(
@@ -39,196 +30,33 @@ extension WHATWGEncoding {
     ]
   )
 
-  /// WHATWG Encoding `ISO-8859-3`
-  static let iso8859_3 = WHATWGEncoding(
-    name: "ISO-8859-3",
-    labels: [
-      "csisolatin3",
-      "iso-8859-3",
-      "iso-ir-109",
-      "iso8859-3",
-      "iso88593",
-      "iso_8859-3",
-      "iso_8859-3:1988",
-      "l3",
-      "latin3",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `ISO-8859-3`
 
-  /// WHATWG Encoding `ISO-8859-4`
-  static let iso8859_4 = WHATWGEncoding(
-    name: "ISO-8859-4",
-    labels: [
-      "csisolatin4",
-      "iso-8859-4",
-      "iso-ir-110",
-      "iso8859-4",
-      "iso88594",
-      "iso_8859-4",
-      "iso_8859-4:1988",
-      "l4",
-      "latin4",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `ISO-8859-4`
 
-  /// WHATWG Encoding `ISO-8859-5`
-  static let iso8859_5 = WHATWGEncoding(
-    name: "ISO-8859-5",
-    labels: [
-      "csisolatincyrillic",
-      "cyrillic",
-      "iso-8859-5",
-      "iso-ir-144",
-      "iso8859-5",
-      "iso88595",
-      "iso_8859-5",
-      "iso_8859-5:1988",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `ISO-8859-5`
 
-  /// WHATWG Encoding `ISO-8859-6`
-  static let iso8859_6 = WHATWGEncoding(
-    name: "ISO-8859-6",
-    labels: [
-      "arabic",
-      "asmo-708",
-      "csiso88596e",
-      "csiso88596i",
-      "csisolatinarabic",
-      "ecma-114",
-      "iso-8859-6",
-      "iso-8859-6-e",
-      "iso-8859-6-i",
-      "iso-ir-127",
-      "iso8859-6",
-      "iso88596",
-      "iso_8859-6",
-      "iso_8859-6:1987",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `ISO-8859-6`
 
-  /// WHATWG Encoding `ISO-8859-7`
-  static let iso8859_7 = WHATWGEncoding(
-    name: "ISO-8859-7",
-    labels: [
-      "csisolatingreek",
-      "ecma-118",
-      "elot_928",
-      "greek",
-      "greek8",
-      "iso-8859-7",
-      "iso-ir-126",
-      "iso8859-7",
-      "iso88597",
-      "iso_8859-7",
-      "iso_8859-7:1987",
-      "sun_eu_greek",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `ISO-8859-7`
 
-  /// WHATWG Encoding `ISO-8859-8`
-  static let iso8859_8 = WHATWGEncoding(
-    name: "ISO-8859-8",
-    labels: [
-      "csiso88598e",
-      "csisolatinhebrew",
-      "hebrew",
-      "iso-8859-8",
-      "iso-8859-8-e",
-      "iso-ir-138",
-      "iso8859-8",
-      "iso88598",
-      "iso_8859-8",
-      "iso_8859-8:1988",
-      "visual",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `ISO-8859-8`
 
-  /// WHATWG Encoding `ISO-8859-8-I`
-  static let iso8859_8I = WHATWGEncoding(
-    name: "ISO-8859-8-I",
-    labels: [
-      "csiso88598i",
-      "iso-8859-8-i",
-      "logical",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `ISO-8859-8-I`
 
-  /// WHATWG Encoding `ISO-8859-10`
-  static let iso8859_10 = WHATWGEncoding(
-    name: "ISO-8859-10",
-    labels: [
-      "csisolatin6",
-      "iso-8859-10",
-      "iso-ir-157",
-      "iso8859-10",
-      "iso885910",
-      "l6",
-      "latin6",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `ISO-8859-10`
 
-  /// WHATWG Encoding `ISO-8859-13`
-  static let iso8859_13 = WHATWGEncoding(
-    name: "ISO-8859-13",
-    labels: [
-      "iso-8859-13",
-      "iso8859-13",
-      "iso885913",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `ISO-8859-13`
 
-  /// WHATWG Encoding `ISO-8859-14`
-  static let iso8859_14 = WHATWGEncoding(
-    name: "ISO-8859-14",
-    labels: [
-      "iso-8859-14",
-      "iso8859-14",
-      "iso885914",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `ISO-8859-14`
 
-  /// WHATWG Encoding `ISO-8859-15`
-  static let iso8859_15 = WHATWGEncoding(
-    name: "ISO-8859-15",
-    labels: [
-      "csisolatin9",
-      "iso-8859-15",
-      "iso8859-15",
-      "iso885915",
-      "iso_8859-15",
-      "l9",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `ISO-8859-15`
 
-  /// WHATWG Encoding `ISO-8859-16`
-  static let iso8859_16 = WHATWGEncoding(
-    name: "ISO-8859-16",
-    labels: [
-      "iso-8859-16",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `ISO-8859-16`
 
-  /// WHATWG Encoding `KOI8-R`
-  static let koi8R = WHATWGEncoding(
-    name: "KOI8-R",
-    labels: [
-      "cskoi8r",
-      "koi",
-      "koi8",
-      "koi8-r",
-      "koi8_r",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `KOI8-R`
 
-  /// WHATWG Encoding `KOI8-U`
-  static let koi8U = WHATWGEncoding(
-    name: "KOI8-U",
-    labels: [
-      "koi8-ru",
-      "koi8-u",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `KOI8-U`
 
   /// WHATWG Encoding `macintosh`
   static let macintosh = WHATWGEncoding(
@@ -241,18 +69,7 @@ extension WHATWGEncoding {
     ]
   )
 
-  /// WHATWG Encoding `windows-874`
-  static let windows874 = WHATWGEncoding(
-    name: "windows-874",
-    labels: [
-      "dos-874",
-      "iso-8859-11",
-      "iso8859-11",
-      "iso885911",
-      "tis-620",
-      "windows-874",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `windows-874`
 
   /// WHATWG Encoding `windows-1250`
   static let windows1250 = WHATWGEncoding(
@@ -327,90 +144,21 @@ extension WHATWGEncoding {
     ]
   )
 
-  /// WHATWG Encoding `windows-1255`
-  static let windows1255 = WHATWGEncoding(
-    name: "windows-1255",
-    labels: [
-      "cp1255",
-      "windows-1255",
-      "x-cp1255",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `windows-1255`
 
-  /// WHATWG Encoding `windows-1256`
-  static let windows1256 = WHATWGEncoding(
-    name: "windows-1256",
-    labels: [
-      "cp1256",
-      "windows-1256",
-      "x-cp1256",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `windows-1256`
 
-  /// WHATWG Encoding `windows-1257`
-  static let windows1257 = WHATWGEncoding(
-    name: "windows-1257",
-    labels: [
-      "cp1257",
-      "windows-1257",
-      "x-cp1257",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `windows-1257`
 
-  /// WHATWG Encoding `windows-1258`
-  static let windows1258 = WHATWGEncoding(
-    name: "windows-1258",
-    labels: [
-      "cp1258",
-      "windows-1258",
-      "x-cp1258",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `windows-1258`
 
-  /// WHATWG Encoding `x-mac-cyrillic`
-  static let xMacCyrillic = WHATWGEncoding(
-    name: "x-mac-cyrillic",
-    labels: [
-      "x-mac-cyrillic",
-      "x-mac-ukrainian",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `x-mac-cyrillic`
 
-  /// WHATWG Encoding `GBK`
-  static let gbk = WHATWGEncoding(
-    name: "GBK",
-    labels: [
-      "chinese",
-      "csgb2312",
-      "csiso58gb231280",
-      "gb2312",
-      "gb_2312",
-      "gb_2312-80",
-      "gbk",
-      "iso-ir-58",
-      "x-gbk",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `GBK`
 
-  /// WHATWG Encoding `gb18030`
-  static let gb18030 = WHATWGEncoding(
-    name: "gb18030",
-    labels: [
-      "gb18030",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `gb18030`
 
-  /// WHATWG Encoding `Big5`
-  static let big5 = WHATWGEncoding(
-    name: "Big5",
-    labels: [
-      "big5",
-      "big5-hkscs",
-      "cn-big5",
-      "csbig5",
-      "x-x-big5",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `Big5`
 
   /// WHATWG Encoding `EUC-JP`
   static let eucJP = WHATWGEncoding(
@@ -446,35 +194,9 @@ extension WHATWGEncoding {
     ]
   )
 
-  /// WHATWG Encoding `EUC-KR`
-  static let eucKR = WHATWGEncoding(
-    name: "EUC-KR",
-    labels: [
-      "cseuckr",
-      "csksc56011987",
-      "euc-kr",
-      "iso-ir-149",
-      "korean",
-      "ks_c_5601-1987",
-      "ks_c_5601-1989",
-      "ksc5601",
-      "ksc_5601",
-      "windows-949",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `EUC-KR`
 
-  /// WHATWG Encoding `replacement`
-  static let replacement = WHATWGEncoding(
-    name: "replacement",
-    labels: [
-      "csiso2022kr",
-      "hz-gb-2312",
-      "iso-2022-cn",
-      "iso-2022-cn-ext",
-      "iso-2022-kr",
-      "replacement",
-    ]
-  )
+  // SKIPPED: WHATWG Encoding `replacement`
 
   /// WHATWG Encoding `UTF-16BE`
   static let utf16BE = WHATWGEncoding(
@@ -498,5 +220,7 @@ extension WHATWGEncoding {
       "utf-16le",
     ]
   )
+
+  // SKIPPED: WHATWG Encoding `x-user-defined`
 
 }

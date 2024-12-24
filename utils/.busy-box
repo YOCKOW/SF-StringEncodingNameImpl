@@ -69,6 +69,12 @@ function update-code() {
     scratchPath="${parsedArguments[--scratch-path]}"
   elif [[ $(( "${YOCKOW_USE_LOCAL_PACKAGES-0}" + 0 )) -gt 0 ]] && [[ -d "$HOME/.yswift-build" ]]; then
     scratchPath="$HOME/.yswift-build"
+    echo "ℹ️ Scratch path is set to \"${scratchPath}\" and local packages are used." 1>&2
+    if [[ -f "${projectDir}/Package.resolved" ]]; then
+      set -x
+      rm "${projectDir}/Package.resolved" 
+      { set +x; } 2>/dev/null
+    fi
   fi
 
   local -a swiftArguments=($@)
