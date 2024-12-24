@@ -11,9 +11,9 @@ package struct WHATWGEncoding {
     self.labels = labels
   }
 
-  func matches(_ string: String) -> Bool {
+  package func matches(_ string: String) -> Bool {
     for label in labels {
-      if label.isEqual(to: string, asStringEncodingNameOf: .whatwgEncoding) {
+      if label.isEqual(to: string, asStringEncodingNameOf: .whatwg) {
         return true
       }
     }

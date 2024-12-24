@@ -48,10 +48,14 @@ function get-assets() {
   local -r whatwgEncodingsJSONRemoteURL="https://encoding.spec.whatwg.org/encodings.json"
   local -r whatwgEncodingsJSONLocalPath="${assetsDir}/whatwgEncodings.json"
 
+  local -r whatwgEncodingLicenseRemoteURL="https://raw.githubusercontent.com/whatwg/encoding/refs/heads/main/LICENSE"
+  local -r whatwgEncodingLicenseLocalPath="${assetsDir}/whatwgEncodingLicense.txt"
+
   set -x
   curl --fail --silent "$ianaCharSetCSVRemoteURL" >"$ianaCharSetCSVLocalPath"
   csvjson -i 2 "$ianaCharSetCSVLocalPath" >"$ianaCharSetJSONLocalPath"
   curl --fail --silent "$whatwgEncodingsJSONRemoteURL" >"$whatwgEncodingsJSONLocalPath"
+  curl --fail --silent "$whatwgEncodingLicenseRemoteURL" >"$whatwgEncodingLicenseLocalPath"
   { set +x; } 2>/dev/null
 }
 
@@ -69,6 +73,12 @@ function update-code() {
     scratchPath="${parsedArguments[--scratch-path]}"
   elif [[ $(( "${YOCKOW_USE_LOCAL_PACKAGES-0}" + 0 )) -gt 0 ]] && [[ -d "$HOME/.yswift-build" ]]; then
     scratchPath="$HOME/.yswift-build"
+    echo "ℹ️ Scratch path is set to \"${scratchPath}\" and local packages are used." 1>&2
+    if [[ -f "${projectDir}/Package.resolved" ]]; then
+      set -x
+      rm "${projectDir}/Package.resolved" 
+      { set +x; } 2>/dev/null
+    fi
   fi
 
   local -a swiftArguments=($@)

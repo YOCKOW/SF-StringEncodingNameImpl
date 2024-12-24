@@ -1,161 +1,197 @@
 import Foundation
 
 private extension Unicode.Scalar {
-  /// Returns the Boolean value that indicates whether `self` and `other` are equal to each other
-  /// case-insensitively.
-  ///
-  /// - Note: Both `self` and `other` must be ASCII.
-  func _isCaseInsensitivelyEqual(to other: Unicode.Scalar) -> Bool {
-    assert(self.isASCII && other.isASCII)
-    if self == other {
-      return true
-    } else if ("A"..."Z").contains(self) {
-      return self.value + 0x20 == other.value
-    } else if ("a"..."z").contains(self) {
-      return self.value - 0x20 == other.value
-    }
-    return false
+  var _isASCIINumeric: Bool {
+    return ("0"..."9").contains(self)
   }
 
   var _asciiNumericValue: Int {
-    assert(("0"..."9").contains(self))
+    assert(_isASCIINumeric)
     return Int(self.value - 0x30)
+  }
+
+  /// Returns the Boolean value that indicates whether or not `self` is "ASCII whitespace".
+  ///
+  /// Reference: https://infra.spec.whatwg.org/#ascii-whitespace
+  var _isASCIIWhitespace: Bool {
+    switch self.value {
+    case 0x09, 0x0A, 0x0C, 0x0D, 0x20: true
+    default: false
+    }
   }
 }
 
 private extension String {
-  var _trimmed: Substring {
-    guard let firstIndexOfNonWhitespace = firstIndex(where: { !$0.isWhitespace }),
-          let lastIndexOfNonWhitespace = lastIndex(where: { !$0.isWhitespace }) else {
-      return ""
+  var _trimmed: Substring.UnicodeScalarView {
+    let scalars = self.unicodeScalars
+    let isNonWhitespace: (Unicode.Scalar) -> Bool = { !$0._isASCIIWhitespace }
+    guard let firstIndexOfNonWhitespace = scalars.firstIndex(where: isNonWhitespace),
+          let lastIndexOfNonWhitespace = scalars.lastIndex(where: isNonWhitespace) else {
+      return Substring.UnicodeScalarView()
     }
-    return self[firstIndexOfNonWhitespace...lastIndexOfNonWhitespace]
+    return scalars[firstIndexOfNonWhitespace...lastIndexOfNonWhitespace]
   }
 }
 
-/// ICU-independent String Encoding Name Parser.
-class StringEncodingNameParser {
-  enum Token: Equatable {
-    case numeric(Int)
-    case caseInsensitiveASCIIAlphabet(Unicode.Scalar)
-    case other(Unicode.Scalar)
+/// A type that holds a `Unicode.Scalar` where its value is compared case-insensitively with others'
+/// _if the value is within ASCII range_.
+struct CaseInsensitiveUnicodeScalar: Equatable, ExpressibleByUnicodeScalarLiteral {
+  typealias UnicodeScalarLiteralType = Unicode.Scalar.UnicodeScalarLiteralType
 
-    static func ==(lhs: Token, rhs: Token) -> Bool {
-      switch (lhs, rhs) {
-      case (.numeric(let lN), .numeric(let rN)):
-        return lN == rN
-      case (.caseInsensitiveASCIIAlphabet(let lA), .caseInsensitiveASCIIAlphabet(let rA)):
-        return lA._isCaseInsensitivelyEqual(to: rA)
-      case (.other(let lO), .other(let rO)):
-        return lO == rO
-      default:
+  let scalar: Unicode.Scalar
+
+  @inlinable
+  init(_ scalar: Unicode.Scalar) {
+    self.scalar = scalar
+  }
+
+  init(unicodeScalarLiteral value: Unicode.Scalar.UnicodeScalarLiteralType) {
+    self.init(Unicode.Scalar(unicodeScalarLiteral: value))
+  }
+
+  @inlinable
+  static func ==(
+    lhs: CaseInsensitiveUnicodeScalar,
+    rhs: CaseInsensitiveUnicodeScalar
+  ) -> Bool {
+    if lhs.scalar == rhs.scalar {
+      return true
+    } else if ("A"..."Z").contains(lhs.scalar) {
+      return lhs.scalar.value + 0x20 == rhs.scalar.value
+    } else if ("a"..."z").contains(lhs.scalar) {
+      return lhs.scalar.value - 0x20 == rhs.scalar.value
+    }
+    return false
+  }
+}
+
+protocol StringEncodingNameTokenizer: ~Copyable {
+  associatedtype Token: Equatable
+  init(name: String)
+  mutating func nextToken() throws -> Token?
+}
+
+extension StringEncodingNameTokenizer {
+  mutating func hasEqualTokens(with other: consuming Self) throws -> Bool {
+    while let myToken = try self.nextToken() {
+      guard let otherToken = try other.nextToken(),
+            myToken == otherToken else {
         return false
       }
     }
+    return try other.nextToken() == nil
+  }
+}
+
+/// ICU-independent parser that follows [Charset Alias Matching](https://www.unicode.org/reports/tr22/tr22-8.html#Charset_Alias_Matching).
+struct IANACharsetNameTokenizer: StringEncodingNameTokenizer {
+  enum Token: Equatable {
+    case numeric(Int)
+    case alphabet(CaseInsensitiveUnicodeScalar)
   }
 
-  enum Variant: Equatable {
-    case ianaCharset
-    case whatwgEncoding
+  enum Error: Swift.Error {
+    case tooLargeNumericValue
   }
+
+  let scalars: String.UnicodeScalarView
+
+  var currentIndex: String.UnicodeScalarView.Index
+
+  init(name: String) {
+    self.scalars = name.unicodeScalars
+    self.currentIndex = scalars.startIndex
+  }
+
+  mutating func nextToken() throws -> Token? {
+    guard currentIndex < scalars.endIndex else {
+      return nil
+    }
+
+    let scalar = scalars[currentIndex]
+    switch scalar {
+    case "0"..."9":
+      // Parse a numeric value ignoring leading zeros.
+      //
+      // NOTE: To prevent the value from overflow, a threhold is set here.
+      //       The max number of digits to be expected is 8 as of now: i.g. `csISO42JISC62261978`.
+      //       It wouldn't matter to throw an error in practice when the value is too large.
+
+      let threshold: Int = 999_999_999
+      var value = scalar._asciiNumericValue
+      scalars.formIndex(after: &currentIndex)
+      while currentIndex < scalars.endIndex {
+        let currentScalar = scalars[currentIndex]
+        guard currentScalar._isASCIINumeric else {
+          break
+        }
+        value = value * 10 + currentScalar._asciiNumericValue
+        if value > threshold {
+          throw Error.tooLargeNumericValue
+        }
+        scalars.formIndex(after: &currentIndex)
+      }
+      return .numeric(value)
+    case "A"..."Z", "a"..."z":
+      scalars.formIndex(after: &currentIndex)
+      return .alphabet(CaseInsensitiveUnicodeScalar(scalar))
+    default:
+      scalars.formIndex(after: &currentIndex)
+      if currentIndex < scalars.endIndex {
+        return try nextToken()
+      }
+      return nil
+    }
+  }
+}
+
+struct WHATWGEncodingNameTokenizer: StringEncodingNameTokenizer {
+  typealias Token = CaseInsensitiveUnicodeScalar
 
   let scalars: Substring.UnicodeScalarView
 
   var currentIndex: Substring.UnicodeScalarView.Index
 
-  let variant: Variant
-
-  init(_ name: String, variant: Variant) {
-    self.scalars = name._trimmed.unicodeScalars
+  init(name: String) {
+    self.scalars = name._trimmed
     self.currentIndex = scalars.startIndex
-    self.variant = variant
   }
 
-  /// Returns the next token.
-  ///
-  /// If `variant` is
-  ///  - `ianaCharset`: this parser follows ["Charset Alias Matching"](https://www.unicode.org/reports/tr22/tr22-8.html#Charset_Alias_Matching)
-  ///                   rule defined in UTS#22.
-  ///  - `whatwgEncoding`: this parser uses just ASCII case-insensitive match.
-  func nextToken() -> Token? {
+  mutating func nextToken() throws -> Token? {
     guard currentIndex < scalars.endIndex else {
       return nil
     }
-
-    func __advance() {
-      currentIndex = scalars.index(after: currentIndex)
+    defer {
+      scalars.formIndex(after: &currentIndex)
     }
-
-    /// Parse the string as IANA charset.
-    func __nextIANACharsetToken() -> Token? {
-      func __parseNumeric() -> Int {
-        var value: Int = 0
-        while currentIndex < scalars.endIndex {
-          let currentScalar = scalars[currentIndex]
-          guard ("0"..."9").contains(currentScalar) else {
-            break
-          }
-          value = value * 10 + currentScalar._asciiNumericValue
-          __advance()
-        }
-        return value
-      }
-
-      let scalar = scalars[currentIndex]
-      switch scalar {
-      case "0"..."9":
-        return .numeric(__parseNumeric())
-      case "A"..."Z", "a"..."z":
-        __advance()
-        return .caseInsensitiveASCIIAlphabet(scalar)
-      default:
-        __advance()
-        if currentIndex < scalars.endIndex {
-          return __nextIANACharsetToken()
-        }
-        return nil
-      }
-    }
-
-    /// Parse the string as WHATWG Encoding Standard.
-    func __nextWHATWGStandardToken() -> Token? {
-      let scalar = scalars[currentIndex]
-      __advance()
-      switch scalar {
-      case "0"..."9":
-        return .numeric(scalar._asciiNumericValue)
-      case "A"..."Z", "a"..."z":
-        return .caseInsensitiveASCIIAlphabet(scalar)
-      default:
-        return .other(scalar)
-      }
-    }
-
-    switch variant {
-    case .ianaCharset:
-      return __nextIANACharsetToken()
-    case .whatwgEncoding:
-      return __nextWHATWGStandardToken()
-    }
+    return  CaseInsensitiveUnicodeScalar(scalars[currentIndex])
   }
 }
 
 extension String {
+  func isEqual<T>(
+    to other: String,
+    tokenizedBy tokenizer: T.Type
+  ) -> Bool where T: StringEncodingNameTokenizer {
+    do {
+      var myTokenizer = T(name: self)
+      let otherTokenizer = T(name: other)
+      return try myTokenizer.hasEqualTokens(with: otherTokenizer)
+    } catch {
+      // Any errors imply that `self` or `other` contains invalid characters.
+      return false
+    }
+  }
+
   func isEqual(
     to other: String,
-    asStringEncodingNameOf variant: StringEncodingNameParser.Variant
+    asStringEncodingNameOf type: String.Encoding.NameType
   ) -> Bool {
-    let myParser = StringEncodingNameParser(self, variant: variant)
-    let otherParser = StringEncodingNameParser(other, variant: variant)
-    while true {
-      let myToken = myParser.nextToken()
-      let otherToken = otherParser.nextToken()
-      guard myToken == otherToken else {
-        return false
-      }
-      if myToken == nil { // End of the strings.
-        return true
-      }
+    switch type {
+    case .iana:
+      return self.isEqual(to: other, tokenizedBy: IANACharsetNameTokenizer.self)
+    case .whatwg:
+      return self.isEqual(to: other, tokenizedBy: WHATWGEncodingNameTokenizer.self)
     }
   }
 }

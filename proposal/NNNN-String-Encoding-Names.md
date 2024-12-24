@@ -19,12 +19,12 @@ For example:
 
 ```swift
 // Based on IANA registry
-print(String.Encoding.utf8.charsetName!) // Prints "UTF-8"
-print(String.Encoding(charsetName: "ISO_646.irv:1991") == .ascii) // Prints "true"
+print(String.Encoding.utf8.name(.iana)!) // Prints "UTF-8"
+print(String.Encoding(iana: "ISO_646.irv:1991") == .ascii) // Prints "true"
 
 // Based on WHATWG Living Standard
-print(String.Encoding.macOSRoman.standardName!) // Prints "macintosh"
-print(String.Encoding(standardName: "us-ascii") == .windowsCP1252) // Prints "true"
+print(String.Encoding.macOSRoman.name(.whatwg)!) // Prints "macintosh"
+print(String.Encoding(whatwg: "us-ascii") == .windowsCP1252) // Prints "true"
 ```
 
 
@@ -94,28 +94,36 @@ extension String.Encoding {
 
 - It is complicated to use multiple CF-functions to get a simple value. That's not *Swifty*.
 - CF functions are legacy APIs that do not always fit with modern requirements.
-- CF APIs are officially unavailable from Swift on non-Darwin platforms.
+- CF APIs are not officially supposed to be called from Swift on non-Darwin platforms.
 
 
 ## Proposed solution
 
 The solution is straightforward.
-We introduce computed properties that return the name, and initializers that create an instance from the name as shown below.
+We introduce a function that return the name, and initializers that create an instance from the name as shown below.
+An enum `NameType` is also introduced to specify the type of the name, following `Locale` as precedent[^locale-precedent]. 
+
+[^locale-precedent]: `Locale` has an enum named [`IdentifierType`](https://developer.apple.com/documentation/foundation/locale/identifiertype) to specify which kind of identifier should be used.
 
 ```swift
 extension String.Encoding {
-  /// Returns the name of the IANA registry "charset" that is the closest mapping to this string
-  /// encoding.
-  public var charsetName: String? { get }
+  /// A type that indicates the standard that defines an encoding's name.
+  public enum NameType {
+    /// The type of names that are registered by IANA (Internet Assigned Numbers Authority).
+    case iana
+
+    /// The type of names that are provided by WHATWG (Web Hypertext Application Technology Working Group)
+    case whatwg
+  }
+
+  /// Returns the encoding name specified by the given `type`.
+  public func name(_ type: NameType) -> String?
 
   /// Creates an instance from the name of the IANA registry "charset".
-  public init?(charsetName: String)
-
-  /// Returns the name of the WHATWG encoding that is the closest mapping to this string encoding.
-  public var standardName: String? { get }
+  public init?(iana: String)
 
   /// Creates an instance from the name of the WHATWG encoding.
-  public init?(standardName: String)
+  public init?(whatwg: String)
 }
 ```
 
@@ -137,18 +145,18 @@ As shown in `String.Encoding`-Name conversion graph below, they are incompatible
 ### `String.Encoding` to Name
 
 - Upper-case letters may be used unlike CF.
-  * `charsetName` returns *Preferred MIME Name* or *Name* of the encoding defined in "IANA Character Sets".
-  * `standardName` returns *Name* of the encoding defined by "The Encoding Standard".
-- `String.Encoding.shiftJIS.charsetName[standardName]` returns "Shift_JIS" since "CP932" is no longer available for a name of any encodings.
+  * `name(.iana)` returns *Preferred MIME Name* or *Name* of the encoding defined in "IANA Character Sets".
+  * `name(.whatwg)` returns *Name* of the encoding defined by "The Encoding Standard".
+- `String.Encoding.shiftJIS.name(.iana[.whatwg])` returns "Shift_JIS" since "CP932" is no longer available for a name of any encodings.
 
 
 ### Name to `String.Encoding`
 
-- `init(charsetName:)` adopts "Charset Alias Matching" defined in [UTX#22](https://www.unicode.org/reports/tr22/tr22-8.html#Charset_Alias_Matching).
+- `init(iana:)` adopts "Charset Alias Matching" defined in [UTX#22](https://www.unicode.org/reports/tr22/tr22-8.html#Charset_Alias_Matching).
   * i.g., "u.t.f-008" is recognized as "UTF-8".
-- `init(charsetName:)` behaves consistently about ISO-8859-*.
+- `init(iana:)` behaves consistently about ISO-8859-*.
   + For example, CF inconsistently handles "ISO-8859-1-Windows-3.1-Latin-1" and "csWindows31Latin1".
-- `init(standardName:)` adopts case-insensitive comparison described in [§4.2. Names and labels](https://encoding.spec.whatwg.org/#names-and-labels) of The Encoding Standard.
+- `init(whatwg:)` adopts case-insensitive comparison described in [§4.2. Names and labels](https://encoding.spec.whatwg.org/#names-and-labels) of The Encoding Standard.
 
 
 
@@ -202,23 +210,6 @@ extension String.Encoding {
 ```
 
 However, this approach would be too arbitrary and too difficult to maintain consistent behavior.
-
-
-### Follow `Locale` as precedent
-
-`Locale` has an enum named [`IdentifierType`](https://developer.apple.com/documentation/foundation/locale/identifiertype) to specify which kind of identifier should be used.
-We can apply that way to `String.Encoding`:
-
-```swift
-extension String.Encoding {
-  public enum NameType {
-    case iana
-    case whatwg
-  }
-  public var name(_ type: NameType) -> String?
-  public init?(name: String, type: NameType)
-}
-```
 
 
 ## Acknowledgments
