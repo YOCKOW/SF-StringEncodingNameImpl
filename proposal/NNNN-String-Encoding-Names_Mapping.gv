@@ -40,6 +40,7 @@ graph EncodingNameMapping {
         color="#0076BA00"
         fontcolor=white
         width=2
+        height=0.9
       ]
 
       ".ascii"
@@ -79,8 +80,7 @@ graph EncodingNameMapping {
         width=3
       ]
 
-      "US-ASCII"
-      "ISO_646.irv:1983"
+      "US-ASCII"; "ISO_646.irv:1983"
       "x-nextstep"
       "EUC-JP"
       "UTF-8"
@@ -190,7 +190,6 @@ graph EncodingNameMapping {
     constraint=false
   ]
   ".ascii" -- "US-ASCII" [dir=both]
-  ".ascii" -- "ISO_646.irv:1983" [dir=back]
   ".japaneseEUC" -- "EUC-JP" [dir=both]
   ".utf8" -- "UTF-8" [dir=both]
   ".isoLatin1" -- "ISO-8859-1" [dir=both]

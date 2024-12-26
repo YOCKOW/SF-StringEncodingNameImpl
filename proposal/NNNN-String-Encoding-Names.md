@@ -163,7 +163,10 @@ As shown in `String.Encoding`-Name conversion graph below, they are incompatible
   + For example, CF inconsistently handles "ISO-8859-1-Windows-3.1-Latin-1" and "csWindows31Latin1".
 - `init(whatwg:)` adopts case-insensitive comparison described in [§4.2. Names and labels](https://encoding.spec.whatwg.org/#names-and-labels) of The Encoding Standard.
 
+#### Rationales for controversial points
 
+- While "ISO_646.irv:1983"(a.k.a. "Code page 1009") is resolved into `.ascii` by CF, it is, strictly speaking, incompatible with "US-ASCII".
+  This proposal decides that `String.Encoding` can't be initialized from "ISO_646.irv:1983".
 
 
 ## Source compatibility

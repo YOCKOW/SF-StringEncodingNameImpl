@@ -77,7 +77,7 @@ extension String.Encoding {
 
       return if __matches(.utf8) {
         .utf8
-      } else if __matches(.usASCII, .iso646Irv1983) {
+      } else if __matches(.usASCII) {
         .ascii
       } else if __matches(.eucJP) {
         .japaneseEUC

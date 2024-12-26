@@ -87,7 +87,7 @@ import Testing
 
   @Test func test_fromCharsetName() {
     #expect(String.Encoding(iana: "us-ascii") == .ascii)
-    #expect(String.Encoding(iana: "iso-ir-2") == .ascii)
+    #expect(String.Encoding(iana: "iso-ir-2") == nil)
     #expect(String.Encoding(iana: "x-nextstep") == nil)
     #expect(String.Encoding(iana: "euc-jp") == .japaneseEUC)
     #expect(String.Encoding(iana: "utf-8") == .utf8)
