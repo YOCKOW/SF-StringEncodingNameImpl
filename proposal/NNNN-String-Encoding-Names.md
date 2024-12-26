@@ -137,9 +137,14 @@ As shown in `String.Encoding`-Name conversion graph below, they are incompatible
 
 ![Graph of Encodings ↔︎ Names](./NNNN-String-Encoding-Names_Mapping.svg)
 *The graph of `String.Encoding`-Name conversions*
-[^utf-16-foundation]
 
-[^utf-16-foundation]: Foundation assumes UTF-16 without BOM is big endian when decoding.
+<details><summary>Notes to the graph</summary><div>
+
+- Only names concerned with current `String.Encoding`s appear.
+- Names here make use of the ones IANA publish in principle.
+- Foundation assumes UTF-16 without BOM is big endian when decoding.
+
+</div></details>
 
 
 ### `String.Encoding` to Name
