@@ -167,6 +167,10 @@ As shown in `String.Encoding`-Name conversion graph below, they are incompatible
 
 - While "ISO_646.irv:1983"(a.k.a. "Code page 1009") is resolved into `.ascii` by CF, it is, strictly speaking, incompatible with "US-ASCII".
   This proposal decides that `String.Encoding` can't be initialized from "ISO_646.irv:1983".
+- "CP51932" was regarded as a variant of "EUC-JP" formulated by Microsoft.
+  It was, however, intended to be used mainly by web browsers (i.e. Internet Explorer considering the historical background) on Windows.
+  As a result, it is incompatible with the original "EUC-JP" widely used on UNIX.
+  Thus, "CP51932" should not be bound to `.japaneseEUC`.
 
 
 ## Source compatibility

@@ -82,7 +82,7 @@ graph EncodingNameMapping {
 
       "US-ASCII"; "ISO_646.irv:1983"
       "x-nextstep"
-      "EUC-JP"
+      "EUC-JP"; "CP51932"
       "UTF-8"
       "ISO-8859-1"
       "x-mac-symbol"
@@ -154,6 +154,7 @@ graph EncodingNameMapping {
   ".ascii" -- "ISO_646.irv:1983" [dir=back]
   ".nextstep" -- "x-nextstep" [dir=both]
   ".japaneseEUC" -- "EUC-JP" [dir=both]
+  ".japaneseEUC" -- "CP51932" [dir=back]
   ".utf8" -- "UTF-8" [dir=both]
   ".isoLatin1" -- "ISO-8859-1" [dir=both]
   ".isoLatin1" -- "ISO-8859-1-Windows-3.0-Latin-1" [dir=back]
