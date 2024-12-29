@@ -159,8 +159,17 @@ As shown in `String.Encoding`-Name conversion graph below, they are incompatible
 - `init(iana:)` adopts "Charset Alias Matching" defined in [UTX#22](https://www.unicode.org/reports/tr22/tr22-8.html#Charset_Alias_Matching).
   * i.g., "u.t.f-008" is recognized as "UTF-8".
 - `init(iana:)` behaves consistently about ISO-8859-*.
-  + For example, CF inconsistently handles "ISO-8859-1-Windows-3.1-Latin-1" and "csWindows31Latin1".
+  * For example, CF inconsistently handles "ISO-8859-1-Windows-3.1-Latin-1" and "csWindows31Latin1".
+  * "ISO-8859-1-Windows-3.0-Latin-1" is a subset of "windows-1252", not of "ISO-8859-1".[^win3.0-latin-1]
+  * "ISO-8859-1-Windows-3.1-Latin-1" is a subset of "windows-1252", not of "ISO-8859-1".[^win3.1-latin-1]
+  * "ISO-8859-2-Windows-Latin-2" is a subset of "windows-1250", not of "ISO-8859-2".[^win-latin-2]
+  * "ISO-8859-9-Windows-Latin-5" is a subset of "windows-1254", not of "ISO-8859-9".[^win-latin-5]
 - `init(whatwg:)` adopts case-insensitive comparison described in [§4.2. Names and labels](https://encoding.spec.whatwg.org/#names-and-labels) of The Encoding Standard.
+
+[^win3.0-latin-1]: https://www.pclviewer.com/resources/symbolset/pcl_9u.pdf
+[^win3.1-latin-1]: https://www.pclviewer.com/resources/symbolset/pcl_19u_V2.pdf
+[^win-latin-2]: https://www.pclviewer.com/resources/symbolset/pcl_9e.pdf
+[^win-latin-5]: https://www.pclviewer.com/resources/symbolset/pcl_5t.pdf
 
 
 ### Rationales for controversial points
