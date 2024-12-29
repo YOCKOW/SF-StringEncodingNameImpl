@@ -137,9 +137,14 @@ As shown in `String.Encoding`-Name conversion graph below, they are incompatible
 
 ![Graph of Encodings ↔︎ Names](./NNNN-String-Encoding-Names_Mapping.svg)
 *The graph of `String.Encoding`-Name conversions*
-[^utf-16-foundation]
 
-[^utf-16-foundation]: Foundation assumes UTF-16 without BOM is big endian when decoding.
+<details><summary>Notes to the graph</summary><div>
+
+- Only names concerned with currently available `String.Encoding`s appear.
+- Names here make use of the ones IANA publish in principle.
+- Foundation assumes UTF-16 without BOM is big endian when decoding.
+
+</div></details>
 
 
 ### `String.Encoding` to Name
@@ -147,7 +152,6 @@ As shown in `String.Encoding`-Name conversion graph below, they are incompatible
 - Upper-case letters may be used unlike CF.
   * `name(.iana)` returns *Preferred MIME Name* or *Name* of the encoding defined in "IANA Character Sets".
   * `name(.whatwg)` returns *Name* of the encoding defined by "The Encoding Standard".
-- `String.Encoding.shiftJIS.name(.iana[.whatwg])` returns "Shift_JIS" since "CP932" is no longer available for a name of any encodings.
 
 
 ### Name to `String.Encoding`
@@ -155,10 +159,30 @@ As shown in `String.Encoding`-Name conversion graph below, they are incompatible
 - `init(iana:)` adopts "Charset Alias Matching" defined in [UTX#22](https://www.unicode.org/reports/tr22/tr22-8.html#Charset_Alias_Matching).
   * i.g., "u.t.f-008" is recognized as "UTF-8".
 - `init(iana:)` behaves consistently about ISO-8859-*.
-  + For example, CF inconsistently handles "ISO-8859-1-Windows-3.1-Latin-1" and "csWindows31Latin1".
+  * For example, CF inconsistently handles "ISO-8859-1-Windows-3.1-Latin-1" and "csWindows31Latin1".
+  * "ISO-8859-1-Windows-3.0-Latin-1" is a subset of "windows-1252", not of "ISO-8859-1".[^win3.0-latin-1]
+  * "ISO-8859-1-Windows-3.1-Latin-1" is a subset of "windows-1252", not of "ISO-8859-1".[^win3.1-latin-1]
+  * "ISO-8859-2-Windows-Latin-2" is a subset of "windows-1250", not of "ISO-8859-2".[^win-latin-2]
+  * "ISO-8859-9-Windows-Latin-5" is a subset of "windows-1254", not of "ISO-8859-9".[^win-latin-5]
 - `init(whatwg:)` adopts case-insensitive comparison described in [§4.2. Names and labels](https://encoding.spec.whatwg.org/#names-and-labels) of The Encoding Standard.
 
+[^win3.0-latin-1]: https://www.pclviewer.com/resources/symbolset/pcl_9u.pdf
+[^win3.1-latin-1]: https://www.pclviewer.com/resources/symbolset/pcl_19u_V2.pdf
+[^win-latin-2]: https://www.pclviewer.com/resources/symbolset/pcl_9e.pdf
+[^win-latin-5]: https://www.pclviewer.com/resources/symbolset/pcl_5t.pdf
 
+
+### Rationales for controversial points
+
+- While "ISO_646.irv:1983"(a.k.a. "Code page 1009") is resolved into `.ascii` by CF, it is, strictly speaking, incompatible with "US-ASCII".
+  This proposal decides that `String.Encoding` can't be initialized from "ISO_646.irv:1983".
+- "CP51932" was regarded as a variant of "EUC-JP" formulated by Microsoft.
+  It was, however, intended to be used mainly by web browsers (i.e. Internet Explorer considering the historical background) on Windows.
+  As a result, it is incompatible with the original "EUC-JP" widely used on UNIX.
+  Thus, "CP51932" should not be bound to `.japaneseEUC`.
+- "CP932" is no longer available for a name of any encodings. Consequently, `String.Encoding.shiftJIS.name(.iana/.whatwg)` returns "Shift_JIS".
+- "Windows-31J" is a variant of "Shift_JIS" extended by Microsoft.
+  For the historical reason, `String.Encoding.shiftJIS` is an encoding equivalent to `kCFStringEncodingDOSJapanese` in CF (not to `kCFStringEncodingShiftJIS`), which means that `.shiftJIS` should be created from the name "Windows-31J" as well.
 
 
 ## Source compatibility

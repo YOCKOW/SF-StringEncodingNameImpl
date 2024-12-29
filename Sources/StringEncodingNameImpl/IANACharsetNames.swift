@@ -111,16 +111,7 @@ extension IANACharset {
 
   // SKIPPED: IANA Character Set `INVARIANT`
 
-  /// IANA Characater Set `ISO_646.irv:1983`
-  static let iso646Irv1983 = IANACharset(
-    preferredMIMEName: nil,
-    name: "ISO_646.irv:1983",
-    aliases: [
-      "iso-ir-2",
-      "irv",
-      "csISO2IntlRefVersion",
-    ]
-  )
+  // SKIPPED: IANA Character Set `ISO_646.irv:1983`
 
   // SKIPPED: IANA Character Set `NATS-SEFI`
 

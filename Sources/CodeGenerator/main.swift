@@ -32,7 +32,7 @@ func printToStderr(_ message: String) {
 
 let requiredIANACharsets: [String] = [
   "UTF-8",
-  "US-ASCII", "ISO_646.irv:1983",
+  "US-ASCII",
   "EUC-JP",
   "ISO-8859-1",
   "Adobe-Symbol-Encoding",

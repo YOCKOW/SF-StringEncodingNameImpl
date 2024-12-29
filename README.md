@@ -10,7 +10,7 @@ This repository is also a Swift package[^dependencies], accordingly you can try 
 let package = Package(
   ...
   dependencies: [
-    .package(url: "https://github.com/YOCKOW/SF-StringEncodingNameImpl.git", from: "0.2.0"),
+    .package(url: "https://github.com/YOCKOW/SF-StringEncodingNameImpl.git", from: "0.2.1"),
   ],
   ...
 )

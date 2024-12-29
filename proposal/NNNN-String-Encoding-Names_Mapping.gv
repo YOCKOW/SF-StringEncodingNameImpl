@@ -39,7 +39,9 @@ graph EncodingNameMapping {
         fillcolor="#0076BAEE"
         color="#0076BA00"
         fontcolor=white
+        fontsize="12pt"
         width=2
+        height=0.86
       ]
 
       ".ascii"
@@ -79,10 +81,9 @@ graph EncodingNameMapping {
         width=3
       ]
 
-      "US-ASCII"
-      "ISO_646.irv:1983"
+      "US-ASCII"; "ISO_646.irv:1983"
       "x-nextstep"
-      "EUC-JP"
+      "EUC-JP"; "CP51932"
       "UTF-8"
       "ISO-8859-1"
       "x-mac-symbol"
@@ -96,20 +97,15 @@ graph EncodingNameMapping {
       "ISO-10646-UCS-2"
       "UNICODE-1-1"
       "windows-1251"
-      "windows-1252"
-      "ISO-8859-1-Windows-3.0-Latin-1"
-      "ISO-8859-1-Windows-3.1-Latin-1"
+      "windows-1252"; "ISO-8859-1-Windows-3.0-Latin-1"; "ISO-8859-1-Windows-3.1-Latin-1"
       "windows-1253"
-      "windows-1254"
-      "ISO-8859-9-Windows-Latin-5"
-      "windows-1250"
-      "ISO-8859-2-Windows-Latin-2"
+      "windows-1254"; "ISO-8859-9-Windows-Latin-5"
+      "windows-1250"; "ISO-8859-2-Windows-Latin-2"
       "ISO-2022-JP"
       "macintosh"
       "UTF-16BE"
       "UTF-16LE"
-      "UTF-32"
-      "ISO-10646-UCS-4"
+      "UTF-32"; "ISO-10646-UCS-4"
       "UTF-32BE"
       "UTF-32LE"
     }
@@ -154,6 +150,7 @@ graph EncodingNameMapping {
   ".ascii" -- "ISO_646.irv:1983" [dir=back]
   ".nextstep" -- "x-nextstep" [dir=both]
   ".japaneseEUC" -- "EUC-JP" [dir=both]
+  ".japaneseEUC" -- "CP51932" [dir=back]
   ".utf8" -- "UTF-8" [dir=both]
   ".isoLatin1" -- "ISO-8859-1" [dir=both]
   ".isoLatin1" -- "ISO-8859-1-Windows-3.0-Latin-1" [dir=back]
@@ -190,7 +187,6 @@ graph EncodingNameMapping {
     constraint=false
   ]
   ".ascii" -- "US-ASCII" [dir=both]
-  ".ascii" -- "ISO_646.irv:1983" [dir=back]
   ".japaneseEUC" -- "EUC-JP" [dir=both]
   ".utf8" -- "UTF-8" [dir=both]
   ".isoLatin1" -- "ISO-8859-1" [dir=both]
