@@ -152,7 +152,6 @@ As shown in `String.Encoding`-Name conversion graph below, they are incompatible
 - Upper-case letters may be used unlike CF.
   * `name(.iana)` returns *Preferred MIME Name* or *Name* of the encoding defined in "IANA Character Sets".
   * `name(.whatwg)` returns *Name* of the encoding defined by "The Encoding Standard".
-- `String.Encoding.shiftJIS.name(.iana[.whatwg])` returns "Shift_JIS" since "CP932" is no longer available for a name of any encodings.
 
 
 ### Name to `String.Encoding`
@@ -163,7 +162,8 @@ As shown in `String.Encoding`-Name conversion graph below, they are incompatible
   + For example, CF inconsistently handles "ISO-8859-1-Windows-3.1-Latin-1" and "csWindows31Latin1".
 - `init(whatwg:)` adopts case-insensitive comparison described in [§4.2. Names and labels](https://encoding.spec.whatwg.org/#names-and-labels) of The Encoding Standard.
 
-#### Rationales for controversial points
+
+### Rationales for controversial points
 
 - While "ISO_646.irv:1983"(a.k.a. "Code page 1009") is resolved into `.ascii` by CF, it is, strictly speaking, incompatible with "US-ASCII".
   This proposal decides that `String.Encoding` can't be initialized from "ISO_646.irv:1983".
@@ -171,6 +171,9 @@ As shown in `String.Encoding`-Name conversion graph below, they are incompatible
   It was, however, intended to be used mainly by web browsers (i.e. Internet Explorer considering the historical background) on Windows.
   As a result, it is incompatible with the original "EUC-JP" widely used on UNIX.
   Thus, "CP51932" should not be bound to `.japaneseEUC`.
+- "CP932" is no longer available for a name of any encodings. Consequently, `String.Encoding.shiftJIS.name(.iana/.whatwg)` returns "Shift_JIS".
+- "Windows-31J" is a variant of "Shift_JIS" extended by Microsoft.
+  For the historical reason, `String.Encoding.shiftJIS` is an encoding equivalent to `kCFStringEncodingDOSJapanese` in CF (not to `kCFStringEncodingShiftJIS`), which means that `.shiftJIS` should be created from the name "Windows-31J" as well.
 
 
 ## Source compatibility
