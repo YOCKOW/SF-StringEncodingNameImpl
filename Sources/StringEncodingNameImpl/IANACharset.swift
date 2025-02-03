@@ -21,14 +21,14 @@ package struct IANACharset {
 
   package func matches(_ string: String) -> Bool {
     if let preferredMIMEName = self.preferredMIMEName,
-       preferredMIMEName.isEqual(to: string, asStringEncodingNameOf: .iana) {
+       preferredMIMEName.isEqual(to: string, tokenizedBy: IANACharsetNameTokenizer.self) {
       return true
     }
-    if name.isEqual(to: string, asStringEncodingNameOf: .iana) {
+    if name.isEqual(to: string, tokenizedBy: IANACharsetNameTokenizer.self) {
       return true
     }
     for alias in aliases {
-      if alias.isEqual(to: string, asStringEncodingNameOf: .iana) {
+      if alias.isEqual(to: string, tokenizedBy: IANACharsetNameTokenizer.self) {
         return true
       }
     }
