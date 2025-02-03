@@ -11,6 +11,46 @@
 * Review: ([Pitch](https://forums.swift.org/t/pitch-foundation-string-encoding-names/74623))
 
 
+## Revision History
+
+### [Pitch#1](https://gist.github.com/YOCKOW/f5a385e3c9e2d0c97f3340a889f57a16/d76651bf4375164f6a46df792fccd74955a4733a)
+
+- Features
+  * Completely CoreFoundation-compatible.
+    + Planned to add static properties corresponding to `kCFStringEncoding*`.
+  * Spelling of getter/initializer was `ianaCharacterSetName`.
+- Pros
+  * Easy to migrate from CoreFoundation.
+- Cons
+  * Propagating undesirable legacy conversions into current Swift Foundation.
+  * Including string encodings which might not be supported by Swift Foundation.
+
+
+### [Pitch#2](https://gist.github.com/YOCKOW/f5a385e3c9e2d0c97f3340a889f57a16/215404d620b41119a8a03ec1a51e725eb09be4b6)
+
+- Features
+  * Consulting both [IANA Character Sets](https://www.iana.org/assignments/character-sets/character-sets.xhtml) and [WHATWG Encoding Standard](https://encoding.spec.whatwg.org/).
+    + Making a compromise between them.
+  * Spelling of getter/initializer was `name`.
+- Pros
+  * Easy to communicate with API.
+- Cons
+  * Hard for users to comprehend conversions.
+  * Difficult to maintain the API in a consistant way.
+
+### [Pitch#3](https://github.com/YOCKOW/SF-StringEncodingNameImpl/blob/0.1.0/proposal/NNNN-String-Encoding-Names.md), [Pitch#4](https://github.com/YOCKOW/SF-StringEncodingNameImpl/blob/0.2.1/proposal/NNNN-String-Encoding-Names.md)
+
+- Features
+  * Consulting both [IANA Character Sets](https://www.iana.org/assignments/character-sets/character-sets.xhtml) and [WHATWG Encoding Standard](https://encoding.spec.whatwg.org/).
+  * Separated getters/initializers for them.
+    + #3: `charsetName` and `standardName` respectively.
+    + #4: `name(.iana)` and `name(.whatwg)` for getters; `init(iana:)` and `init(whatwg:)` for initializers.
+- Pros
+  * Users can recognize what kind of conversions is used.
+- Cons
+  * Not reflecting the fact that WHATWG's Encoding Standard doesn't provide only string encoding names but also implementations to encode/decode data.
+
+
 ## Introduction
 
 This proposal allows `String.Encoding` to be converted to and from various names.
