@@ -11,6 +11,51 @@
 * Review: ([Pitch](https://forums.swift.org/t/pitch-foundation-string-encoding-names/74623))
 
 
+## Revision History
+
+### [Pitch#1](https://gist.github.com/YOCKOW/f5a385e3c9e2d0c97f3340a889f57a16/d76651bf4375164f6a46df792fccd74955a4733a)
+
+- Features
+  * Fully compatible with CoreFoundation.
+    + Planned to add static properties corresponding to `kCFStringEncoding*`.
+  * Spelling of getter/initializer was `ianaCharacterSetName`.
+- Pros
+  * Easy to migrate from CoreFoundation.
+- Cons
+  * Propagating undesirable legacy conversions into current Swift Foundation.
+  * Including string encodings which might not be supported by Swift Foundation.
+
+
+### [Pitch#2](https://gist.github.com/YOCKOW/f5a385e3c9e2d0c97f3340a889f57a16/215404d620b41119a8a03ec1a51e725eb09be4b6)
+
+- Features
+  * Consulting both [IANA Character Sets](https://www.iana.org/assignments/character-sets/character-sets.xhtml) and [WHATWG Encoding Standard](https://encoding.spec.whatwg.org/).
+    + Making a compromise between them.
+  * Spelling of getter/initializer was `name`.
+- Pros
+  * Easy to communicate with API.
+- Cons
+  * Hard for users to comprehend conversions.
+  * Difficult to maintain the API in a consistant way.
+
+### [Pitch#3](https://github.com/YOCKOW/SF-StringEncodingNameImpl/blob/0.1.0/proposal/NNNN-String-Encoding-Names.md), [Pitch#4](https://github.com/YOCKOW/SF-StringEncodingNameImpl/blob/0.2.1/proposal/NNNN-String-Encoding-Names.md)
+
+- Features
+  * Consulting both [IANA Character Sets](https://www.iana.org/assignments/character-sets/character-sets.xhtml) and [WHATWG Encoding Standard](https://encoding.spec.whatwg.org/).
+  * Separated getters/initializers for them.
+    + #3: `charsetName` and `standardName` respectively.
+    + #4: `name(.iana)` and `name(.whatwg)` for getters; `init(iana:)` and `init(whatwg:)` for initializers.
+- Pros
+  * Users can recognize what kind of conversions is used.
+- Cons
+  * Not reflecting the fact that WHATWG's Encoding Standard doesn't provide only string encoding names but also implementations to encode/decode data.
+
+### Pitch#5
+
+This pitch.
+
+
+
 ## Introduction
 
 This proposal allows `String.Encoding` to be converted to and from various names.
@@ -18,13 +63,8 @@ This proposal allows `String.Encoding` to be converted to and from various names
 For example:
 
 ```swift
-// Based on IANA registry
-print(String.Encoding.utf8.name(.iana)!) // Prints "UTF-8"
-print(String.Encoding(iana: "ISO_646.irv:1991") == .ascii) // Prints "true"
-
-// Based on WHATWG Living Standard
-print(String.Encoding.macOSRoman.name(.whatwg)!) // Prints "macintosh"
-print(String.Encoding(whatwg: "us-ascii") == .windowsCP1252) // Prints "true"
+print(String.Encoding.utf8.name!) // Prints "UTF-8"
+print(String.Encoding(name: "ISO_646.irv:1991") == .ascii) // Prints "true"
 ```
 
 
@@ -43,7 +83,7 @@ Swift lacks the necessary APIs, requiring the use of `CoreFoundation` (hereinaft
 extension String.Encoding {
   var nameInLegacyWay: String? {
     // 1. Convert `String.Encoding` value to the `CFStringEncoding` value.
-    //    NOTE: The raw value of `String.Encoding` is the same with the value of `NSStringEncoding`,
+    //    NOTE: The raw value of `String.Encoding` is the same as the value of `NSStringEncoding`,
     //          while it is not equal to the value of `CFStringEncoding`.
     let cfStrEncValue: CFStringEncoding = CFStringConvertNSStringEncodingToEncoding(self.rawValue)
 
@@ -92,79 +132,52 @@ extension String.Encoding {
 
 ### What's the problem of the current solution?
 
-- It is complicated to use multiple CF-functions to get a simple value. That's not *Swifty*.
-- CF functions are legacy APIs that do not always fit with modern requirements.
-- CF APIs are not officially supposed to be called from Swift on non-Darwin platforms.
+- It is complicated to use multiple CF functions to get a simple value. That's not *Swifty*.
+- CF functions are legacy APIs that do not always meet modern requirements.
+- CF APIs are not officially intended to be called directly from Swift on non-Darwin platforms.
 
 
 ## Proposed solution
 
 The solution is straightforward.
-We introduce a function that return the name, and initializers that create an instance from the name as shown below.
-An enum `NameType` is also introduced to specify the type of the name, following `Locale` as precedent[^locale-precedent]. 
-
-[^locale-precedent]: `Locale` has an enum named [`IdentifierType`](https://developer.apple.com/documentation/foundation/locale/identifiertype) to specify which kind of identifier should be used.
+We introduce a computed property that returns the name, and the initializer that creates an instance from a name as shown below.
 
 ```swift
 extension String.Encoding {
-  /// A type that indicates the standard that defines an encoding's name.
-  public enum NameType {
-    /// The type of names that are registered by IANA (Internet Assigned Numbers Authority).
-    case iana
-
-    /// The type of names that are provided by WHATWG (Web Hypertext Application Technology Working Group)
-    case whatwg
-  }
-
-  /// Returns the encoding name specified by the given `type`.
-  public func name(_ type: NameType) -> String?
+  /// The name of this encoding that is compatible with the one of the IANA registry "charset".
+  public var name: String?
 
   /// Creates an instance from the name of the IANA registry "charset".
-  public init?(iana: String)
-
-  /// Creates an instance from the name of the WHATWG encoding.
-  public init?(whatwg: String)
+  public init?(name: String)
 }
 ```
 
 ## Detailed design
 
-This proposal refers to "[Character Sets](https://www.iana.org/assignments/character-sets/character-sets.xhtml)" published by IANA and to "[The Encoding Standard](https://encoding.spec.whatwg.org/)" published by WHATWG. While the latter may claim the former could be replaced with it, it entirely focuses on Web browsers (and their JavaScript APIs).
-
-As shown in `String.Encoding`-Name conversion graph below, they are incompatible, making it difficult to compromise. Although you may want to ask which is better, the choice of which to use depends on your specific needs[^your-specific-needs]. Since Swift APIs should be more universal, here we consult both.
-
-[^your-specific-needs]: You may just want to parse an old XML document on local.
+This proposal refers to "[Character Sets](https://www.iana.org/assignments/character-sets/character-sets.xhtml)" published by IANA because CF APIs do so.
+However, as mentioned above, CF APIs are sometimes out of step with the times.
+Therefore, we need to adjust it to some extent:
 
 ![Graph of Encodings ↔︎ Names](./NNNN-String-Encoding-Names_Mapping.svg)
 *The graph of `String.Encoding`-Name conversions*
-
-<details><summary>Notes to the graph</summary><div>
-
-- Only names concerned with currently available `String.Encoding`s appear.
-- Names here make use of the ones IANA publish in principle.
-- Foundation assumes UTF-16 without BOM is big endian when decoding.
-
-</div></details>
 
 
 ### `String.Encoding` to Name
 
 - Upper-case letters may be used unlike CF.
-  * `name(.iana)` returns *Preferred MIME Name* or *Name* of the encoding defined in "IANA Character Sets".
-  * `name(.whatwg)` returns *Name* of the encoding defined by "The Encoding Standard".
+  * `var name` returns *Preferred MIME Name* or *Name* of the encoding defined in "IANA Character Sets".
 
 
 ### Name to `String.Encoding`
 
-- `init(iana:)` adopts "Charset Alias Matching" defined in [UTX#22](https://www.unicode.org/reports/tr22/tr22-8.html#Charset_Alias_Matching).
+- `init(name:)` adopts "Charset Alias Matching" defined in [UTX#22](https://www.unicode.org/reports/tr22/tr22-8.html#Charset_Alias_Matching).
   * i.g., "u.t.f-008" is recognized as "UTF-8".
-- `init(iana:)` behaves consistently about ISO-8859-*.
+- `init(name:)` behaves consistently about ISO-8859-*.
   * For example, CF inconsistently handles "ISO-8859-1-Windows-3.1-Latin-1" and "csWindows31Latin1".
   * "ISO-8859-1-Windows-3.0-Latin-1" is a subset of "windows-1252", not of "ISO-8859-1".[^win3.0-latin-1]
   * "ISO-8859-1-Windows-3.1-Latin-1" is a subset of "windows-1252", not of "ISO-8859-1".[^win3.1-latin-1]
   * "ISO-8859-2-Windows-Latin-2" is a subset of "windows-1250", not of "ISO-8859-2".[^win-latin-2]
   * "ISO-8859-9-Windows-Latin-5" is a subset of "windows-1254", not of "ISO-8859-9".[^win-latin-5]
-- `init(whatwg:)` adopts case-insensitive comparison described in [§4.2. Names and labels](https://encoding.spec.whatwg.org/#names-and-labels) of The Encoding Standard.
 
 [^win3.0-latin-1]: https://www.pclviewer.com/resources/symbolset/pcl_9u.pdf
 [^win3.1-latin-1]: https://www.pclviewer.com/resources/symbolset/pcl_19u_V2.pdf
@@ -179,10 +192,10 @@ As shown in `String.Encoding`-Name conversion graph below, they are incompatible
 - "CP51932" was regarded as a variant of "EUC-JP" formulated by Microsoft.
   It was, however, intended to be used mainly by web browsers (i.e. Internet Explorer considering the historical background) on Windows.
   As a result, it is incompatible with the original "EUC-JP" widely used on UNIX.
-  Thus, "CP51932" should not be bound to `.japaneseEUC`.
-- "CP932" is no longer available for a name of any encodings. Consequently, `String.Encoding.shiftJIS.name(.iana/.whatwg)` returns "Shift_JIS".
+  Consequently, "CP51932" should not be associated with `.japaneseEUC`.
+- "CP932" is no longer available for a name of any encodings. Consequently, `String.Encoding.shiftJIS.name` returns "Shift_JIS".
 - "Windows-31J" is a variant of "Shift_JIS" extended by Microsoft.
-  For the historical reason, `String.Encoding.shiftJIS` is an encoding equivalent to `kCFStringEncodingDOSJapanese` in CF (not to `kCFStringEncodingShiftJIS`), which means that `.shiftJIS` should be created from the name "Windows-31J" as well.
+  For historical reasons, `String.Encoding.shiftJIS` is an encoding equivalent to `kCFStringEncodingDOSJapanese` in CF (not to `kCFStringEncodingShiftJIS`), which means that `.shiftJIS` should be created from the name "Windows-31J" as well.
 
 
 ## Source compatibility
@@ -202,38 +215,45 @@ This feature can be freely adopted and un-adopted in source code with no deploym
 [^string-data-regression]: https://github.com/swiftlang/swift-foundation/issues/1015
 
 
-## Alternatives considered
+Hopefully, happening some cascades like below might be expected in the longer term.
 
-### Expose APIs only for the IANA Character Sets
+- General string decoders/encoders and their protocols (for example, as suggested in "[Unicode Processing APIs](https://forums.swift.org/t/pitch-unicode-processing-apis/69294)") could be implemented.
 
-Modern Web browsers have unfortunately deviated from the IANA's charset list. That means that it is better to adhere to the WHATWG Encoding Standard if you handle mainly web contents. We often require "The Living Standard" to cover such use cases.
+- Some types which provide their names and decoders/encoders could be implemented for the purpose of tightness between names and implementations.
+  * There would be a type for WHATWG Encoding Standard which defines both names and implementations.
 
-
-### Expose APIs only for the WHATWG Encoding Standard
-
-As mentioned above, the WHATWG Encoding Standard focuses on latest Web browsers. This can cause issues in some cases.
-
-Imagine handling an XML 1.1 file declaring that its encoding is "ISO-8859-1": `<?xml version="1.1" encoding="ISO-8859-1"?>`. What if that file contains a byte `0x85`? `0x85` is recognized as `U+0085`(`NEL`) in ISO-8859-1 which is a valid end-of-line character in XML 1.1[^U+0085-in-xml].
-
-[^U+0085-in-xml]: https://www.w3.org/TR/xml11/#sec-line-ends
-
-On the other hand, the WHATWG Encoding Standard argues that "ISO-8859-1" label must be resolved as "windows-1252". A byte `0x85` is decoded to `U+2026`(`Horizontal Ellipsis`) in windows-1252 and that may cause fatal error to parse the XML file.
-
-In such cases, consulting the IANA registry is necessary.
-
-
-### Consolidate them
-
-We might be able to consolidate them into a single kind of API like this:
+<details><summary>They would look like...</summary><div>
 
 ```swift
-extension String.Encoding {
-  public var name: String? { get }
-  public init?(name: String)
+public protocol StrawmanStringEncodingProtocol {
+  static func encoding(for name: String) -> Self?
+  var name: String? { get }
+  var encoder: (any StringToByteStreamEncoder)? { get }
+  var decoder: (any ByteStreamToUnicodeScalarsDecoder)? { get }
+}
+
+public struct WHATWGEncoding: StrawmanStringEncodingProtocol {
+  public static let utf8: WHATWGEncoding = ...
+  public static let eucJP: WHATWGEncoding = ...
+  :
+  :
 }
 ```
 
-However, this approach would be too arbitrary and too difficult to maintain consistent behavior.
+</div></details>
+
+- `String.Encoding` might be deprecated as a natural course in the distant future??
+
+
+## Alternatives considered
+
+### Adopting the WHATWG Encoding Standard (as well)
+
+There is another standard for string encodings which is published by WHATWG: "[Encoding Standard](https://encoding.spec.whatwg.org/)".
+While it may claim the IANA's Character Sets could be replaced with it, it entirely focuses on Web browsers and their JavaScript APIs.
+Furthermore it binds tightly names with implementations.
+Since `String.Encoding` is just a `RawRepresentable` type where its `RawValue` is `UInt`, it is more universal but is more loosely bound to implementations.
+As a result, WHATWG Encoding Standard doesn't easily align with `String.Encoding`. So it is just mentioned in "Future Directions".
 
 
 ## Acknowledgments

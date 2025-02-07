@@ -9,29 +9,8 @@ private extension Unicode.Scalar {
     assert(_isASCIINumeric)
     return Int(self.value - 0x30)
   }
-
-  /// Returns the Boolean value that indicates whether or not `self` is "ASCII whitespace".
-  ///
-  /// Reference: https://infra.spec.whatwg.org/#ascii-whitespace
-  var _isASCIIWhitespace: Bool {
-    switch self.value {
-    case 0x09, 0x0A, 0x0C, 0x0D, 0x20: true
-    default: false
-    }
-  }
 }
 
-private extension String {
-  var _trimmed: Substring.UnicodeScalarView {
-    let scalars = self.unicodeScalars
-    let isNonWhitespace: (Unicode.Scalar) -> Bool = { !$0._isASCIIWhitespace }
-    guard let firstIndexOfNonWhitespace = scalars.firstIndex(where: isNonWhitespace),
-          let lastIndexOfNonWhitespace = scalars.lastIndex(where: isNonWhitespace) else {
-      return Substring.UnicodeScalarView()
-    }
-    return scalars[firstIndexOfNonWhitespace...lastIndexOfNonWhitespace]
-  }
-}
 
 /// A type that holds a `Unicode.Scalar` where its value is compared case-insensitively with others'
 /// _if the value is within ASCII range_.
@@ -145,29 +124,6 @@ struct IANACharsetNameTokenizer: StringEncodingNameTokenizer {
   }
 }
 
-struct WHATWGEncodingNameTokenizer: StringEncodingNameTokenizer {
-  typealias Token = CaseInsensitiveUnicodeScalar
-
-  let scalars: Substring.UnicodeScalarView
-
-  var currentIndex: Substring.UnicodeScalarView.Index
-
-  init(name: String) {
-    self.scalars = name._trimmed
-    self.currentIndex = scalars.startIndex
-  }
-
-  mutating func nextToken() throws -> Token? {
-    guard currentIndex < scalars.endIndex else {
-      return nil
-    }
-    defer {
-      scalars.formIndex(after: &currentIndex)
-    }
-    return  CaseInsensitiveUnicodeScalar(scalars[currentIndex])
-  }
-}
-
 extension String {
   func isEqual<T>(
     to other: String,
@@ -180,18 +136,6 @@ extension String {
     } catch {
       // Any errors imply that `self` or `other` contains invalid characters.
       return false
-    }
-  }
-
-  func isEqual(
-    to other: String,
-    asStringEncodingNameOf type: String.Encoding.NameType
-  ) -> Bool {
-    switch type {
-    case .iana:
-      return self.isEqual(to: other, tokenizedBy: IANACharsetNameTokenizer.self)
-    case .whatwg:
-      return self.isEqual(to: other, tokenizedBy: WHATWGEncodingNameTokenizer.self)
     }
   }
 }

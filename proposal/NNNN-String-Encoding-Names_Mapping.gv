@@ -126,14 +126,7 @@ graph EncodingNameMapping {
       style=dashed
       color="#D783FF"
       fontcolor="#D783FF"
-      label=IANA
-      dir=forward
-    ]
-    "legendWHATWG-start" -- "legendWHATWG-end" [ 
-      style=solid
-      color="#FEAE00"
-      fontcolor="#FEAE00"
-      label=WHATWG
+      label="This Proposal"
       dir=forward
     ]
   }
@@ -214,32 +207,5 @@ graph EncodingNameMapping {
   ".utf32" -- "ISO-10646-UCS-4" [dir=back]
   ".utf32BigEndian" -- "UTF-32BE" [dir=both]
   ".utf32LittleEndian" -- "UTF-32LE" [dir=both]
-
-  // WHATWG
-  edge [
-    style=solid
-    color="#FEAE00CC"
-    fontcolor="#FEAE00"
-    label=""
-    constraint=false
-  ]
-  ".japaneseEUC" -- "EUC-JP" [dir=both]
-  ".utf8" -- "UTF-8" [dir=both]
-  ".shiftJIS" -- "Shift_JIS" [dir=both]
-  ".shiftJIS" -- "Windows-31J" [dir=back]
-  ".isoLatin2" -- "ISO-8859-2" [dir=both]
-  ".windowsCP1251" -- "windows-1251" [dir=both]
-  ".windowsCP1252" -- "US-ASCII" [dir=back]
-  ".windowsCP1252" -- "ISO-8859-1" [dir=back]
-  ".windowsCP1252" -- "windows-1252" [dir=both]
-  ".windowsCP1253" -- "windows-1253" [dir=both]
-  ".windowsCP1254" -- "windows-1254" [dir=both]
-  ".windowsCP1250" -- "windows-1250" [dir=both]
-  ".iso2022JP" -- "ISO-2022-JP" [dir=both]
-  ".macOSRoman" -- "macintosh" [dir=both]
-  ".utf16BigEndian" -- "UTF-16BE" [dir=both]
-  ".utf16LittleEndian" -- "UTF-16LE" [dir=both]
-  ".utf16LittleEndian" -- "UTF-16" [dir=back]
-  ".utf16LittleEndian" -- "ISO-10646-UCS-2" [dir=back]
 }
 

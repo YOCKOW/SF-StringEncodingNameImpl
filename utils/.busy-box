@@ -45,17 +45,9 @@ function get-assets() {
   local -r ianaCharSetCSVLocalPath="${assetsDir}/iana-character-sets-1.csv"
   local -r ianaCharSetJSONLocalPath="${assetsDir}/ianaCharacterSets.json"
 
-  local -r whatwgEncodingsJSONRemoteURL="https://encoding.spec.whatwg.org/encodings.json"
-  local -r whatwgEncodingsJSONLocalPath="${assetsDir}/whatwgEncodings.json"
-
-  local -r whatwgEncodingLicenseRemoteURL="https://raw.githubusercontent.com/whatwg/encoding/refs/heads/main/LICENSE"
-  local -r whatwgEncodingLicenseLocalPath="${assetsDir}/whatwgEncodingLicense.txt"
-
   set -x
   curl --fail --silent "$ianaCharSetCSVRemoteURL" >"$ianaCharSetCSVLocalPath"
   csvjson -i 2 "$ianaCharSetCSVLocalPath" >"$ianaCharSetJSONLocalPath"
-  curl --fail --silent "$whatwgEncodingsJSONRemoteURL" >"$whatwgEncodingsJSONLocalPath"
-  curl --fail --silent "$whatwgEncodingLicenseRemoteURL" >"$whatwgEncodingLicenseLocalPath"
   { set +x; } 2>/dev/null
 }
 
