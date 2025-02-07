@@ -16,7 +16,7 @@
 ### [Pitch#1](https://gist.github.com/YOCKOW/f5a385e3c9e2d0c97f3340a889f57a16/d76651bf4375164f6a46df792fccd74955a4733a)
 
 - Features
-  * Completely CoreFoundation-compatible.
+  * Fully compatible with CoreFoundation.
     + Planned to add static properties corresponding to `kCFStringEncoding*`.
   * Spelling of getter/initializer was `ianaCharacterSetName`.
 - Pros
@@ -83,7 +83,7 @@ Swift lacks the necessary APIs, requiring the use of `CoreFoundation` (hereinaft
 extension String.Encoding {
   var nameInLegacyWay: String? {
     // 1. Convert `String.Encoding` value to the `CFStringEncoding` value.
-    //    NOTE: The raw value of `String.Encoding` is the same with the value of `NSStringEncoding`,
+    //    NOTE: The raw value of `String.Encoding` is the same as the value of `NSStringEncoding`,
     //          while it is not equal to the value of `CFStringEncoding`.
     let cfStrEncValue: CFStringEncoding = CFStringConvertNSStringEncodingToEncoding(self.rawValue)
 
@@ -133,8 +133,8 @@ extension String.Encoding {
 ### What's the problem of the current solution?
 
 - It is complicated to use multiple CF functions to get a simple value. That's not *Swifty*.
-- CF functions are legacy APIs that do not always fit with modern requirements.
-- CF APIs are not officially supposed to be called directly from Swift on non-Darwin platforms.
+- CF functions are legacy APIs that do not always meet modern requirements.
+- CF APIs are not officially intended to be called directly from Swift on non-Darwin platforms.
 
 
 ## Proposed solution
@@ -156,7 +156,7 @@ extension String.Encoding {
 
 This proposal refers to "[Character Sets](https://www.iana.org/assignments/character-sets/character-sets.xhtml)" published by IANA because CF APIs do so.
 However, as mentioned above, CF APIs are sometimes out of step with the times.
-Hence we need to tune up to some extent:
+Therefore, we need to adjust it to some extent:
 
 ![Graph of Encodings ↔︎ Names](./NNNN-String-Encoding-Names_Mapping.svg)
 *The graph of `String.Encoding`-Name conversions*
@@ -192,10 +192,10 @@ Hence we need to tune up to some extent:
 - "CP51932" was regarded as a variant of "EUC-JP" formulated by Microsoft.
   It was, however, intended to be used mainly by web browsers (i.e. Internet Explorer considering the historical background) on Windows.
   As a result, it is incompatible with the original "EUC-JP" widely used on UNIX.
-  Thus, "CP51932" should not be bound to `.japaneseEUC`.
+  Consequently, "CP51932" should not be associated with `.japaneseEUC`.
 - "CP932" is no longer available for a name of any encodings. Consequently, `String.Encoding.shiftJIS.name` returns "Shift_JIS".
 - "Windows-31J" is a variant of "Shift_JIS" extended by Microsoft.
-  For the historical reason, `String.Encoding.shiftJIS` is an encoding equivalent to `kCFStringEncodingDOSJapanese` in CF (not to `kCFStringEncodingShiftJIS`), which means that `.shiftJIS` should be created from the name "Windows-31J" as well.
+  For historical reasons, `String.Encoding.shiftJIS` is an encoding equivalent to `kCFStringEncodingDOSJapanese` in CF (not to `kCFStringEncodingShiftJIS`), which means that `.shiftJIS` should be created from the name "Windows-31J" as well.
 
 
 ## Source compatibility
@@ -217,7 +217,7 @@ This feature can be freely adopted and un-adopted in source code with no deploym
 
 Hopefully, happening some cascades like below might be expected in the longer term.
 
-- General string decoders/encoders and protocols for them (for example, as suggested in "[Unicode Processing APIs](https://forums.swift.org/t/pitch-unicode-processing-apis/69294)") could be implemented.
+- General string decoders/encoders and their protocols (for example, as suggested in "[Unicode Processing APIs](https://forums.swift.org/t/pitch-unicode-processing-apis/69294)") could be implemented.
 
 - Some types which provide their names and decoders/encoders could be implemented for the purpose of tightness between names and implementations.
   * There would be a type for WHATWG Encoding Standard which defines both names and implementations.
@@ -253,7 +253,7 @@ There is another standard for string encodings which is published by WHATWG: "[E
 While it may claim the IANA's Character Sets could be replaced with it, it entirely focuses on Web browsers and their JavaScript APIs.
 Furthermore it binds tightly names with implementations.
 Since `String.Encoding` is just a `RawRepresentable` type where its `RawValue` is `UInt`, it is more universal but is more loosely bound to implementations.
-As a result, WHATWG Encoding Standard doesn't fit so easily with `String.Encoding`. So it is just mentioned in "Future Directions".
+As a result, WHATWG Encoding Standard doesn't easily align with `String.Encoding`. So it is just mentioned in "Future Directions".
 
 
 ## Acknowledgments
