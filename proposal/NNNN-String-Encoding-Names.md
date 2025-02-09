@@ -232,6 +232,13 @@ public protocol StrawmanStringEncodingProtocol {
   var decoder: (any ByteStreamToUnicodeScalarsDecoder)? { get }
 }
 
+public struct IANACharset: StrawmanStringEncodingProtocol {
+  public static let utf8: IANACharset = ...
+  public static let shiftJIS: IANACharset = ...
+  :
+  :
+}
+
 public struct WHATWGEncoding: StrawmanStringEncodingProtocol {
   public static let utf8: WHATWGEncoding = ...
   public static let eucJP: WHATWGEncoding = ...
