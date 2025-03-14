@@ -19,16 +19,19 @@ package struct IANACharset {
     self.aliases = aliases
   }
 
-  package func matches(_ string: String) -> Bool {
+  package func matches<T>(
+    _ string: String,
+    tokenizedBy tokenizer: T.Type
+  ) -> Bool where T: StringEncodingNameTokenizer {
     if let preferredMIMEName = self.preferredMIMEName,
-       preferredMIMEName.isEqual(to: string, tokenizedBy: IANACharsetNameTokenizer.self) {
+       preferredMIMEName.isEqual(to: string, tokenizedBy: tokenizer) {
       return true
     }
-    if name.isEqual(to: string, tokenizedBy: IANACharsetNameTokenizer.self) {
+    if name.isEqual(to: string, tokenizedBy: tokenizer) {
       return true
     }
     for alias in aliases {
-      if alias.isEqual(to: string, tokenizedBy: IANACharsetNameTokenizer.self) {
+      if alias.isEqual(to: string, tokenizedBy: tokenizer) {
         return true
       }
     }
