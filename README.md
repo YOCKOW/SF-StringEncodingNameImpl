@@ -10,7 +10,7 @@ This repository is also a Swift package[^dependencies], accordingly you can try 
 let package = Package(
   ...
   dependencies: [
-    .package(url: "https://github.com/YOCKOW/SF-StringEncodingNameImpl.git", from: "0.3.1"),
+    .package(url: "https://github.com/YOCKOW/SF-StringEncodingNameImpl.git", from: "0.4.0"),
   ],
   ...
 )
@@ -21,8 +21,8 @@ let package = Package(
 import StringEncodingNameImpl
 
 // Based on IANA registry
-print(String.Encoding.utf8.name!) // Prints "UTF-8"
-print(String.Encoding(name: "ISO_646.irv:1991") == .ascii) // Prints "true"
+print(String.Encoding.utf8.ianaName!) // Prints "UTF-8"
+print(String.Encoding(ianaName: "ISO_646.irv:1991") == .ascii) // Prints "true"
 ```
 
 [^dependencies]: This package depends on other packages which are required for the code generator. `StringEncodingNameImpl` itself has no dependencies.
