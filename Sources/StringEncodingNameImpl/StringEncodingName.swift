@@ -27,17 +27,17 @@ extension String.Encoding {
   }
 
   /// The name of this encoding that is compatible with the one of the IANA registry "charset".
-  public var name: String? {
+  public var ianaName: String? {
     return _ianaCharset?.representativeName
   }
 
   /// Creates an instance from the name of the IANA registry "charset".
-  public init?(name charsetName: String) {
+  public init?(ianaName charsetName: String) {
     func __determineEncoding() -> String.Encoding? {
       func __matches(_ charsets: IANACharset...) -> Bool {
         assert(!charsets.isEmpty)
         for charset in charsets {
-          if charset.matches(charsetName) {
+          if charset.matches(charsetName, tokenizedBy: ASCIICaseInsensitiveTokenizer.self) {
             return true
           }
         }
@@ -52,23 +52,21 @@ extension String.Encoding {
         .japaneseEUC
       } else if __matches(.iso8859_1) {
         .isoLatin1
-      } else if __matches(.adobeSymbolEncoding) {
-        .symbol
-      } else if __matches(.shiftJIS, .windows31J) {
+      } else if __matches(.shiftJIS) {
         .shiftJIS
       } else if __matches(.iso8859_2) {
         .isoLatin2
-      } else if __matches(.utf16, .iso10646UCS2, .unicode1_1) {
+      } else if __matches(.utf16) {
         .utf16
       } else if __matches(.windows1251) {
         .windowsCP1251
-      } else if __matches(.windows1252, .iso8859_1Windows3_0Latin1, .iso8859_1Windows3_1Latin1) {
+      } else if __matches(.windows1252) {
         .windowsCP1252
       } else if __matches(.windows1253) {
         .windowsCP1253
-      } else if __matches(.windows1254, .iso8859_9WindowsLatin5) {
+      } else if __matches(.windows1254) {
         .windowsCP1254
-      } else if __matches(.windows1250, .iso8859_2WindowsLatin2) {
+      } else if __matches(.windows1250) {
         .windowsCP1250
       } else if __matches(.iso2022JP) {
         .iso2022JP
@@ -78,7 +76,7 @@ extension String.Encoding {
         .utf16BigEndian
       } else if __matches(.utf16LE) {
         .utf16LittleEndian
-      } else if __matches(.utf32, .iso10646UCS4) {
+      } else if __matches(.utf32) {
         .utf32
       } else if __matches(.utf32BE) {
         .utf32BigEndian

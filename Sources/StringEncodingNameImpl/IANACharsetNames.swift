@@ -301,23 +301,9 @@ extension IANACharset {
 
   // SKIPPED: IANA Character Set `KZ-1048`
 
-  /// IANA Characater Set `ISO-10646-UCS-2`
-  static let iso10646UCS2 = IANACharset(
-    preferredMIMEName: nil,
-    name: "ISO-10646-UCS-2",
-    aliases: [
-      "csUnicode",
-    ]
-  )
+  // SKIPPED: IANA Character Set `ISO-10646-UCS-2`
 
-  /// IANA Characater Set `ISO-10646-UCS-4`
-  static let iso10646UCS4 = IANACharset(
-    preferredMIMEName: nil,
-    name: "ISO-10646-UCS-4",
-    aliases: [
-      "csUCS4",
-    ]
-  )
+  // SKIPPED: IANA Character Set `ISO-10646-UCS-4`
 
   // SKIPPED: IANA Character Set `ISO-10646-UCS-Basic`
 
@@ -335,14 +321,7 @@ extension IANACharset {
 
   // SKIPPED: IANA Character Set `ISO-Unicode-IBM-1265`
 
-  /// IANA Characater Set `UNICODE-1-1`
-  static let unicode1_1 = IANACharset(
-    preferredMIMEName: nil,
-    name: "UNICODE-1-1",
-    aliases: [
-      "csUnicode11",
-    ]
-  )
+  // SKIPPED: IANA Character Set `UNICODE-1-1`
 
   // SKIPPED: IANA Character Set `SCSU`
 
@@ -408,41 +387,13 @@ extension IANACharset {
 
   // SKIPPED: IANA Character Set `UTF-7-IMAP`
 
-  /// IANA Characater Set `ISO-8859-1-Windows-3.0-Latin-1`
-  static let iso8859_1Windows3_0Latin1 = IANACharset(
-    preferredMIMEName: nil,
-    name: "ISO-8859-1-Windows-3.0-Latin-1",
-    aliases: [
-      "csWindows30Latin1",
-    ]
-  )
+  // SKIPPED: IANA Character Set `ISO-8859-1-Windows-3.0-Latin-1`
 
-  /// IANA Characater Set `ISO-8859-1-Windows-3.1-Latin-1`
-  static let iso8859_1Windows3_1Latin1 = IANACharset(
-    preferredMIMEName: nil,
-    name: "ISO-8859-1-Windows-3.1-Latin-1",
-    aliases: [
-      "csWindows31Latin1",
-    ]
-  )
+  // SKIPPED: IANA Character Set `ISO-8859-1-Windows-3.1-Latin-1`
 
-  /// IANA Characater Set `ISO-8859-2-Windows-Latin-2`
-  static let iso8859_2WindowsLatin2 = IANACharset(
-    preferredMIMEName: nil,
-    name: "ISO-8859-2-Windows-Latin-2",
-    aliases: [
-      "csWindows31Latin2",
-    ]
-  )
+  // SKIPPED: IANA Character Set `ISO-8859-2-Windows-Latin-2`
 
-  /// IANA Characater Set `ISO-8859-9-Windows-Latin-5`
-  static let iso8859_9WindowsLatin5 = IANACharset(
-    preferredMIMEName: nil,
-    name: "ISO-8859-9-Windows-Latin-5",
-    aliases: [
-      "csWindows31Latin5",
-    ]
-  )
+  // SKIPPED: IANA Character Set `ISO-8859-9-Windows-Latin-5`
 
   // SKIPPED: IANA Character Set `hp-roman8`
 
@@ -472,14 +423,7 @@ extension IANACharset {
 
   // SKIPPED: IANA Character Set `HP-Math8`
 
-  /// IANA Characater Set `Adobe-Symbol-Encoding`
-  static let adobeSymbolEncoding = IANACharset(
-    preferredMIMEName: nil,
-    name: "Adobe-Symbol-Encoding",
-    aliases: [
-      "csHPPSMath",
-    ]
-  )
+  // SKIPPED: IANA Character Set `Adobe-Symbol-Encoding`
 
   // SKIPPED: IANA Character Set `HP-DeskTop`
 
@@ -487,14 +431,7 @@ extension IANACharset {
 
   // SKIPPED: IANA Character Set `Microsoft-Publishing`
 
-  /// IANA Characater Set `Windows-31J`
-  static let windows31J = IANACharset(
-    preferredMIMEName: nil,
-    name: "Windows-31J",
-    aliases: [
-      "csWindows31J",
-    ]
-  )
+  // SKIPPED: IANA Character Set `Windows-31J`
 
   // SKIPPED: IANA Character Set `GB2312`
 

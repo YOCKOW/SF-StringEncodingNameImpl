@@ -28,20 +28,20 @@ let requiredIANACharsets: [String] = [
   "US-ASCII",
   "EUC-JP",
   "ISO-8859-1",
-  "Adobe-Symbol-Encoding",
-  "Shift_JIS", "Windows-31J",
+  // "Adobe-Symbol-Encoding",
+  "Shift_JIS", // "Windows-31J",
   "ISO-8859-2",
-  "UTF-16", "ISO-10646-UCS-2", "UNICODE-1-1",
+  "UTF-16", // "ISO-10646-UCS-2", "UNICODE-1-1",
   "windows-1251",
-  "windows-1252", "ISO-8859-1-Windows-3.0-Latin-1", "ISO-8859-1-Windows-3.1-Latin-1",
+  "windows-1252", // "ISO-8859-1-Windows-3.0-Latin-1", "ISO-8859-1-Windows-3.1-Latin-1",
   "windows-1253",
-  "windows-1254", "ISO-8859-9-Windows-Latin-5",
-  "windows-1250", "ISO-8859-2-Windows-Latin-2",
+  "windows-1254", // "ISO-8859-9-Windows-Latin-5",
+  "windows-1250", // "ISO-8859-2-Windows-Latin-2",
   "ISO-2022-JP",
   "macintosh",
   "UTF-16BE",
   "UTF-16LE",
-  "UTF-32", "ISO-10646-UCS-4",
+  "UTF-32", // "ISO-10646-UCS-4",
   "UTF-32BE",
   "UTF-32LE",
 ]
@@ -66,7 +66,7 @@ extension IANACharset: Decodable {
 
   var isRequired: Bool {
     for req in requiredIANACharsets {
-      if self.matches(req) {
+      if self.matches(req, tokenizedBy: UTS22Tokenizer.self) {
         return true
       }
     }

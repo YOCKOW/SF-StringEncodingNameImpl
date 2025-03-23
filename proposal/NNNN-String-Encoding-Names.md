@@ -42,6 +42,7 @@
 
 - Features
   * Consulting both [IANA Character Sets](https://www.iana.org/assignments/character-sets/character-sets.xhtml) and [WHATWG Encoding Standard](https://encoding.spec.whatwg.org/).
+  * Following ["Charset Alias Matching"](https://www.unicode.org/reports/tr22/tr22-8.html#Charset_Alias_Matching) rule defined in UTS#22  to parse IANA Charset Names.
   * Separated getters/initializers for them.
     + #3: `charsetName` and `standardName` respectively.
     + #4: `name(.iana)` and `name(.whatwg)` for getters; `init(iana:)` and `init(whatwg:)` for initializers.
@@ -50,10 +51,23 @@
 - Cons
   * Not reflecting the fact that WHATWG's Encoding Standard doesn't provide only string encoding names but also implementations to encode/decode data.
 
-### Pitch#5
+### [Pitch#5](https://github.com/YOCKOW/SF-StringEncodingNameImpl/blob/0.3.1/proposal/NNNN-String-Encoding-Names.md)
+
+- Features
+  * Withdrew support for [WHATWG Encoding Standard](https://encoding.spec.whatwg.org/).
+  * Following ["Charset Alias Matching"](https://www.unicode.org/reports/tr22/tr22-8.html#Charset_Alias_Matching) rule defined in UTS#22  to parse IANA Charset Names.
+  * Spelling of getter/initializer was `name`.
+  * "Fixed" some behaviour of parsing, which differs from CoreFoundation.
+- Pros
+  * Simple API to use.
+- Cons
+  * It was unclear that IANA names were used.
+  * The parsing behavior was complex and unpredictable.
+
+
+### Pitch#6
 
 This pitch.
-
 
 
 ## Introduction
@@ -63,8 +77,8 @@ This proposal allows `String.Encoding` to be converted to and from various names
 For example:
 
 ```swift
-print(String.Encoding.utf8.name!) // Prints "UTF-8"
-print(String.Encoding(name: "ISO_646.irv:1991") == .ascii) // Prints "true"
+print(String.Encoding.utf8.ianaName!) // Prints "UTF-8"
+print(String.Encoding(ianaName: "ISO_646.irv:1991") == .ascii) // Prints "true"
 ```
 
 
@@ -145,57 +159,70 @@ We introduce a computed property that returns the name, and the initializer that
 ```swift
 extension String.Encoding {
   /// The name of this encoding that is compatible with the one of the IANA registry "charset".
-  public var name: String?
+  public var ianaName: String?
 
   /// Creates an instance from the name of the IANA registry "charset".
-  public init?(name: String)
+  public init?(ianaName: String)
 }
 ```
 
 ## Detailed design
 
-This proposal refers to "[Character Sets](https://www.iana.org/assignments/character-sets/character-sets.xhtml)" published by IANA because CF APIs do so.
-However, as mentioned above, CF APIs are sometimes out of step with the times.
-Therefore, we need to adjust it to some extent:
+This proposal refers to "[Character Sets](https://www.iana.org/assignments/character-sets/character-sets.xhtml)" published by IANA.
 
-![Graph of Encodings ↔︎ Names](./NNNN-String-Encoding-Names_Mapping.svg)
-*The graph of `String.Encoding`-Name conversions*
+One of the reasons for this is that The World Wide Web Consortium (W3C) recommends using IANA "charset" names in XML[^XML-IANA-charset-names] and they assert that any IANA "charset" names are available in HTTP header[^HTTP-IANA-charset-names].
+
+[^XML-IANA-charset-names]: https://www.w3.org/TR/xml11/#charencoding
+[^HTTP-IANA-charset-names]: https://www.w3.org/International/articles/http-charset/index#charset
+
+Another reason is that CF claims that IANA "charset" names are used, as implied by its function names[^CF-IANA-function-names].
+
+[^CF-IANA-function-names]: [`CFStringConvertIANACharSetNameToEncoding`](https://developer.apple.com/documentation/corefoundation/cfstringconvertianacharsetnametoencoding(_:)) and [`CFStringConvertEncodingToIANACharSetName`](https://developer.apple.com/documentation/corefoundation/cfstringconvertencodingtoianacharsetname(_:))
+
+However, as mentioned above, CF APIs are sometimes outdated.
+Furthermore, CF parses "charset" names inconsistently[^CF-inconsistent-parse].
+Therefore, we shouldn't adopt CF-like behavior without modifications. Nevertheless, adjusting it to some extent can be unpredictable and complex.
+
+[^CF-inconsistent-parse]: https://forums.swift.org/t/pitch-foundation-string-encoding-names/74623/53
+
+Accordingly, this proposal suggests just simple correspondence between `String.Encoding` instances and IANA names:
+
+
+| `String.Encoding`    | IANA "charset" Name |
+|----------------------|---------------------|
+| `.ascii`             | US-ASCII            |
+| `.iso2022JP`         | ISO-2022-JP         |
+| `.isoLatin1`         | ISO-8859-1          |
+| `.isoLatin2`         | ISO-8859-2          |
+| `.japaneseEUC`       | EUC-JP              |
+| `.macOSRoman`        | macintosh           |
+| `.nextstep`          | *n/a*               |
+| `.nonLossyASCII`     | *n/a*               |
+| `.shiftJIS`          | Shift_JIS           |
+| `.symbol`            | *n/a*               |
+| `.unicode`/`.utf16`  | UTF-16              |
+| `.utf16BigEndian`    | UTF-16BE            |
+| `.utf16LittleEndian` | UTF-16LE            |
+| `.utf32`             | UTF-32              |
+| `.utf32BigEndian`    | UTF-32BE            |
+| `.utf32LittleEndian` | UTF-32LE            |
+| `.utf8`              | UTF-8               |
+| `.windowsCP1250`     | windows-1250        |
+| `.windowsCP1251`     | windows-1251        |
+| `.windowsCP1252`     | windows-1252        |
+| `.windowsCP1253`     | windows-1253        |
+| `.windowsCP1254`     | windows-1254        |
 
 
 ### `String.Encoding` to Name
 
 - Upper-case letters may be used unlike CF.
-  * `var name` returns *Preferred MIME Name* or *Name* of the encoding defined in "IANA Character Sets".
+  * `var ianaName` returns *Preferred MIME Name* or *Name* of the encoding defined in "IANA Character Sets".
 
 
 ### Name to `String.Encoding`
 
-- `init(name:)` adopts "Charset Alias Matching" defined in [UTX#22](https://www.unicode.org/reports/tr22/tr22-8.html#Charset_Alias_Matching).
-  * i.g., "u.t.f-008" is recognized as "UTF-8".
-- `init(name:)` behaves consistently about ISO-8859-*.
-  * For example, CF inconsistently handles "ISO-8859-1-Windows-3.1-Latin-1" and "csWindows31Latin1".
-  * "ISO-8859-1-Windows-3.0-Latin-1" is a subset of "windows-1252", not of "ISO-8859-1".[^win3.0-latin-1]
-  * "ISO-8859-1-Windows-3.1-Latin-1" is a subset of "windows-1252", not of "ISO-8859-1".[^win3.1-latin-1]
-  * "ISO-8859-2-Windows-Latin-2" is a subset of "windows-1250", not of "ISO-8859-2".[^win-latin-2]
-  * "ISO-8859-9-Windows-Latin-5" is a subset of "windows-1254", not of "ISO-8859-9".[^win-latin-5]
-
-[^win3.0-latin-1]: https://www.pclviewer.com/resources/symbolset/pcl_9u.pdf
-[^win3.1-latin-1]: https://www.pclviewer.com/resources/symbolset/pcl_19u_V2.pdf
-[^win-latin-2]: https://www.pclviewer.com/resources/symbolset/pcl_9e.pdf
-[^win-latin-5]: https://www.pclviewer.com/resources/symbolset/pcl_5t.pdf
-
-
-### Rationales for controversial points
-
-- While "ISO_646.irv:1983"(a.k.a. "Code page 1009") is resolved into `.ascii` by CF, it is, strictly speaking, incompatible with "US-ASCII".
-  This proposal decides that `String.Encoding` can't be initialized from "ISO_646.irv:1983".
-- "CP51932" was regarded as a variant of "EUC-JP" formulated by Microsoft.
-  It was, however, intended to be used mainly by web browsers (i.e. Internet Explorer considering the historical background) on Windows.
-  As a result, it is incompatible with the original "EUC-JP" widely used on UNIX.
-  Consequently, "CP51932" should not be associated with `.japaneseEUC`.
-- "CP932" is no longer available for a name of any encodings. Consequently, `String.Encoding.shiftJIS.name` returns "Shift_JIS".
-- "Windows-31J" is a variant of "Shift_JIS" extended by Microsoft.
-  For historical reasons, `String.Encoding.shiftJIS` is an encoding equivalent to `kCFStringEncodingDOSJapanese` in CF (not to `kCFStringEncodingShiftJIS`), which means that `.shiftJIS` should be created from the name "Windows-31J" as well.
+- `init(ianaName:)` adopts case-insensitive comparison with *Preferred MIME Name*, *Name*, and *Aliases*.
 
 
 ## Source compatibility
@@ -253,6 +280,28 @@ public struct WHATWGEncoding: StrawmanStringEncodingProtocol {
 
 
 ## Alternatives considered
+
+### Following "Charset Alias Matching"
+
+[UTS#22](https://www.unicode.org/reports/tr22/tr22-8.html) defines "Charset Alias Matching" rule.
+ICU adopts that rule and CF partially depends on ICU.
+On the other hand, there doesn't seem to be any specifications that require "Charset Alias Matching".
+Moreover, some risks may be inherent in such a tolerant rule.
+
+One possible solution may be letting users choose which rule should be used:
+```swift
+extension String.Encoding {
+  public enum NameParsingStrategy {
+    case uts22
+    case caseInsensitiveComparison
+  }
+
+  public init?(ianaName: String, strategy: NameParsingStrategy = .caseInsensitiveComparison) {
+    ...
+  }
+}
+```
+
 
 ### Adopting the WHATWG Encoding Standard (as well)
 
